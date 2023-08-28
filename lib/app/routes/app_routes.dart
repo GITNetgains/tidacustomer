@@ -6,7 +6,25 @@ abstract class Routes {
   static const HOME = _Paths.HOME;
   static const BOOKEXP = _Paths.BOOKEXP;
   static const SPORTS = _Paths.SPORTS;
-  
+  static const ACADEMY_LIST = _Paths.ACADEMY_LIST;
+  static const ACADEMY_FULL_DETAILS = _Paths.ACADEMY_FULL_DETAILS;
+  static const VENUE_FULL_DETAILS = _Paths.VENUE_FULL_DETAILS;
+  static const VENUE_LIST = _Paths.VENUE_LIST;
+  static const FACILITY_SLOTS = _Paths.FACILITY_SLOTS;
+  static const EXPERIENCE_LIST = _Paths.EXPERIENCE_LIST;
+  static const EXPERIENCE_DETAILS = _Paths.EXPERIENCE_DETAILS;
+  static const TOURNAMENT_LIST = _Paths.TOURNAMENT_LIST;
+  static const TOURNAMENT_DETAILS = _Paths.TOURNAMENT_DETAILS;
+  static const SEARCH_SCREEN = _Paths.SEARCH_SCREEN;
+  static const FILTER_SCREEN = _Paths.FILTER_SCREEN;
+  static const PROFILE = _Paths.PROFILE;
+  static const CHANGE_PASSWORD = _Paths.CHANGE_PASSWORD;
+  static const ABOUT_US = _Paths.ABOUT_US;
+  static const PP = _Paths.PP;
+  static const TNC = _Paths.TNC;
+  static const FAQ = _Paths.FAQ;
+  static const SETTINGS = _Paths.SETTINGS;
+  static const PINNED = _Paths.PINNED;
 }
 abstract class _Paths {
     _Paths._();
@@ -15,4 +33,23 @@ abstract class _Paths {
   static const HOME = "/home";
   static const BOOKEXP = "/bookexp";
   static const SPORTS = "/sports";
+  static const ACADEMY_LIST = "/academy_list";
+  static const ACADEMY_FULL_DETAILS = "/academy_full_details";
+  static const VENUE_FULL_DETAILS = "/venue_full_details";
+  static const VENUE_LIST = "/venue_list";
+  static const FACILITY_SLOTS = "/facility_slots";
+  static const EXPERIENCE_LIST = "/experience_list";
+  static const EXPERIENCE_DETAILS = "/experience_details";
+  static const TOURNAMENT_LIST = "/tournament_list";
+  static const TOURNAMENT_DETAILS = "/tournament_details";
+  static const SEARCH_SCREEN = "/search_screen";
+  static const FILTER_SCREEN = "/filter_screen";
+  static const PROFILE = "/profile";
+  static const CHANGE_PASSWORD = "/change_password";
+  static const ABOUT_US = "/about_us";
+  static const PP = "/pp";
+  static const TNC = "/tnc";
+  static const FAQ = "/faq";
+  static const SETTINGS = "/settings";
+  static const PINNED = "/pinned";
 }

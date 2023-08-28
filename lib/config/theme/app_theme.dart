@@ -69,7 +69,7 @@ Widget setHeadlineMedium(String text,
     textAlign: TextAlign.left,
     style: getAppFontB(
         textStyle: TextStyle(
-            fontSize: fontSize,
+            fontSize: fontSize.sp,
             letterSpacing: 0.1,
             color: color,
             fontWeight: FontWeight.w500)),
@@ -81,7 +81,7 @@ Widget setPrimaryTextLarge(String text,
   return Text(text,
       style: getAppFontA(
           textStyle: TextStyle(
-              fontSize: fontSize, color: color, fontWeight: FontWeight.w400)));
+              fontSize: fontSize.sp, color: color, fontWeight: FontWeight.w400)));
 }
 
 Widget setPrimaryTextMed(String text,
@@ -89,7 +89,7 @@ Widget setPrimaryTextMed(String text,
   return Text(text,
       style: getAppFontA(
           textStyle: TextStyle(
-              fontSize: fontSize,
+              fontSize: fontSize.sp,
               color: color,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.1)));
@@ -104,7 +104,7 @@ Widget setCardHeading(String text,
     maxLines: max,
     style: getAppFontA(
         textStyle: TextStyle(
-            fontSize: fontSize,
+            fontSize: fontSize.sp,
             overflow: TextOverflow.ellipsis,
             color: color,
             fontWeight: FontWeight.w500)),
@@ -137,7 +137,7 @@ Widget setXSmallLabel(String text,
   return Text(text,
       style: getAppFontA(
           textStyle: TextStyle(
-              fontSize: fontSize,
+              fontSize: fontSize.sp,
               color: opacity ? Colors.black : color,
               fontWeight: fw)));
 }
@@ -153,7 +153,7 @@ Widget setMediumLabel(String text,
       style: getAppFontA(
           textStyle: TextStyle(
         decoration: decoration,
-        fontSize: fontSize,
+        fontSize: fontSize.sp,
         color: color,
         fontWeight: FontWeight.w400,
       )));

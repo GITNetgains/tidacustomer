@@ -139,6 +139,7 @@ class HomeController extends GetxController {
     authtoken = MySharedPref.getauthtoken();
     email = MySharedPref.getemail();
     avatar = MySharedPref.getavatar();
+    radius.value = MySharedPref.getradius().toString();
     clearList();
     sportsdata();
     if(getloc.value == true)
@@ -326,5 +327,14 @@ class HomeController extends GetxController {
       Get.offAllNamed(AppPages.LOGIN);
       update();
     });
+  }
+   Future updateImageVariable() async {
+    try {
+      avatar = await MySharedPref.getavatar();
+      name = await MySharedPref.getName();
+      update();
+    } catch (e) {
+      debugPrint("error");
+    }
   }
 }

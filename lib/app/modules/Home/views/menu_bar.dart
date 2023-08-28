@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tida_customer/app/modules/Home/controllers/home_controller.dart';
+import 'package:tida_customer/app/modules/Pinned/controllers/pinned_controller.dart';
 import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
@@ -28,7 +29,7 @@ class Menubar extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
-                // Get.toNamed(AppRoutes.profile);
+                Get.toNamed(AppPages.PROFILE);
                 kDrawerKey.currentState?.closeDrawer();
               },
               child: UserAccountsDrawerHeader(
@@ -92,6 +93,7 @@ class Menubar extends StatelessWidget {
               title: setMediumLabel('Profile'),
               onTap: () {
                 // Get.toNamed(AppRoutes.profile);
+                Get.toNamed(AppPages.PROFILE);
                 kDrawerKey.currentState?.closeDrawer();
               },
             ),
@@ -101,7 +103,7 @@ class Menubar extends StatelessWidget {
               leading: const Icon(Icons.calendar_month),
               title: setMediumLabel('Bookings'),
               onTap: () {
-                // Get.toNamed(AppRoutes.booking);
+                // Get.toNamed(AppPages.);
               },
             ),
             ListTile(
@@ -110,8 +112,8 @@ class Menubar extends StatelessWidget {
               leading: const Icon(Icons.live_tv_outlined),
               title: setMediumLabel('Library'),
               onTap: () async {
-                // await Get.toNamed(AppRoutes.pinned);
-                // Get.delete<LikedTournamentDetailsVM>();
+                await Get.toNamed(AppPages.PINNED);
+                // Get.delete<PinnedController>();
               },
             ),
             ListTile(
@@ -195,7 +197,7 @@ class Menubar extends StatelessWidget {
                   dense: true,
                   leading: const Icon(Icons.settings),
                   title: setMediumLabel('Settings'),
-                  // onTap: () => Get.toNamed(),
+                  onTap: () => Get.toNamed(AppPages.SETTINGS),
                 ),
               ],
             ),

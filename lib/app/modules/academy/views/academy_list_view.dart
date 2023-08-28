@@ -29,7 +29,7 @@ class AcademyListView extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     itemCount: c.academies!.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return academyCard(c.academies![index]!.logo.toString(), c.academies![index]!.name.toString(), c.academies![index]!.description.toString());
+                      return academyCard(c.academies![index]!.logo.toString(), c.academies![index]!.name.toString(), c.academies![index]!.description.toString(), c.academies![index]!.id!.toString());
                     }),
           ),
         ),

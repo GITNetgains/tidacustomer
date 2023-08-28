@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:tida_customer/app/components/app_bottom_sheet.dart';
 import 'package:tida_customer/app/modules/Home/controllers/home_controller.dart';
 import 'package:tida_customer/app/modules/Home/views/menu_bar.dart';
+import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
 import 'package:tida_customer/utils/custom_cards.dart';
@@ -129,7 +130,7 @@ class HomeView extends StatelessWidget {
   Widget searchbar(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Get.toNamed(/);
+        Get.toNamed(AppPages.SEARCH_SCREEN);
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0).h,
@@ -219,7 +220,7 @@ class HomeView extends StatelessWidget {
                     ? Container()
                     : InkWell(
                         onTap: () {
-                          // Get.toNamed(AppRoutes.academyList);
+                          Get.toNamed(AppPages.ACADEMY_LIST);
                         },
                         child: setHeadlineMedium("See All",
                             color: PRIMARY_COLOR, fontSize: SMALL_FONT))
@@ -241,7 +242,7 @@ class HomeView extends StatelessWidget {
                     return academyCard(
                         c.academies![index]!.logo.toString(),
                         c.academies![index]!.name.toString(),
-                        c.academies![index]!.address.toString());
+                        c.academies![index]!.address.toString(), c.academies![index]!.id.toString());
                   })),
           ),
         ],
@@ -264,7 +265,7 @@ class HomeView extends StatelessWidget {
                     ? Container()
                     : InkWell(
                         onTap: () {
-                          // Get.toNamed(AppRoutes.academyList);
+                          Get.toNamed(AppPages.TOURNAMENT_LIST);
                         },
                         child: setHeadlineMedium("See All",
                             color: PRIMARY_COLOR, fontSize: SMALL_FONT))
@@ -286,7 +287,7 @@ class HomeView extends StatelessWidget {
                     return tournamentcard(
                         c.tournamentslist![index]!.image.toString(),
                         c.tournamentslist![index]!.title.toString(),
-                        c.tournamentslist![index]!.description.toString());
+                        c.tournamentslist![index]!.description.toString(), c.tournamentslist![index]!.id.toString());
                   })),
           ),
         ],
@@ -350,7 +351,7 @@ class HomeView extends StatelessWidget {
                     ? Container()
                     : InkWell(
                         onTap: () {
-                          // Get.toNamed(AppRoutes.academyList);
+                          Get.toNamed(AppPages.VENUE_LIST);
                         },
                         child: setHeadlineMedium("See All",
                             color: PRIMARY_COLOR, fontSize: SMALL_FONT))
@@ -371,7 +372,8 @@ class HomeView extends StatelessWidget {
                     return venuecard(
                         c.venueshomelist![index]!.image.toString(),
                         c.venueshomelist![index]!.title.toString(),
-                        c.venueshomelist![index]!.address.toString());
+                        c.venueshomelist![index]!.address.toString(),
+                        c.venueshomelist![index]!.id.toString());
                   })),
           ),
         ],
@@ -394,7 +396,7 @@ class HomeView extends StatelessWidget {
                     ? Container()
                     : InkWell(
                         onTap: () {
-                          // Get.toNamed(AppRoutes.academyList);
+                          Get.toNamed(AppPages.EXPERIENCE_LIST);
                         },
                         child: setHeadlineMedium("See All",
                             color: PRIMARY_COLOR, fontSize: SMALL_FONT))
@@ -416,7 +418,8 @@ class HomeView extends StatelessWidget {
                     return experincecard(
                         c.experienceslist![index]!.image.toString(),
                         c.experienceslist![index]!.title.toString(),
-                        c.experienceslist![index]!.description.toString());
+                        c.experienceslist![index]!.description.toString(), 
+                        c.experienceslist![index]!.id.toString());
                   })),
           ),
         ],

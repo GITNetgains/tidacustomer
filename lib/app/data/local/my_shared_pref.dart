@@ -1,4 +1,3 @@
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MySharedPref {
@@ -14,6 +13,9 @@ class MySharedPref {
   static const String _longi = "longi";
   static const String _lati = "lati";
   static const String _city = "city";
+  static const String _radius = "100";
+  static const String _filtervenue = "venue";
+  static const String _filterraduius = "100";
 
   static Future<void> init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
@@ -51,23 +53,38 @@ class MySharedPref {
   static void setsportsdata(String sportsdata) =>
       _sharedPreferences.setString(_sportsdata, sportsdata);
 
-  static String? getSportsData() => _sharedPreferences.getString(_sportsdata) ?? "";
+  static String? getSportsData() =>
+      _sharedPreferences.getString(_sportsdata) ?? "";
 
- static void setlati(String lati) =>
-      _sharedPreferences.setString(_lati, lati);
+  static void setlati(String lati) => _sharedPreferences.setString(_lati, lati);
 
   static String? getlati() => _sharedPreferences.getString(_lati) ?? "";
 
-   static void setlongi(String longi) =>
+  static void setlongi(String longi) =>
       _sharedPreferences.setString(_longi, longi);
 
   static String? getlongi() => _sharedPreferences.getString(_longi) ?? "";
 
- static void setcity(String city) =>
-      _sharedPreferences.setString(_city, city);
+  static void setcity(String city) => _sharedPreferences.setString(_city, city);
 
   static String? getcity() => _sharedPreferences.getString(_city) ?? "";
 
+  static void setradius(String radius) =>
+      _sharedPreferences.setString(_radius, radius);
+
+  static String? getradius() => _sharedPreferences.getString(_radius) ?? "";
+
+  static void setfiltervenue(String filtervenue) =>
+      _sharedPreferences.setString(_filtervenue, filtervenue);
+
+  static String? getfiltervenue() =>
+      _sharedPreferences.getString(_filtervenue) ?? "";
+
+  static void setfilterradius(String filterraduius) =>
+      _sharedPreferences.setString(_filterraduius, filterraduius);
+
+  static String? getfilterradius() =>
+      _sharedPreferences.getString(_filterraduius) ?? "";
 
   static void clearSession() {
     _sharedPreferences.clear();

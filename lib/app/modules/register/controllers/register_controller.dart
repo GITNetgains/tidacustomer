@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:tida_customer/app/data/local/my_shared_pref.dart';
 import 'package:tida_customer/app/data/remote/api_service.dart';
 import 'package:tida_customer/app/modules/login/models/Login_model.dart';
+import 'package:tida_customer/app/modules/sports/models/sports_data_response.dart';
 import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/utils/common_utils.dart';
 
@@ -16,6 +17,32 @@ class RegisterController extends GetxController {
   TextEditingController confirmpasswordcontroller = TextEditingController();
   RxBool isLoading = false.obs;
 
+   Future<void> getSportsData() async {
+    var data = {
+      "userid": MySharedPref.getid(), //"3",
+      "token": MySharedPref.getauthtoken() //"dfdd92bea16946f54b1cfe794dca3db9",
+    };
+
+    await ApiService.getSportsData(data).then((response) {
+      SportsDataResponse? res = sportsDataResponseFromJson(response);
+      debugPrint("IN hEEre1");
+      if (res!.status!) {
+        debugPrint("IN hEEre");
+        MySharedPref.setsportsdata(response);
+        update();
+      } else {
+        debugPrint("IN hEEre3");
+        if (res.message == "Session Expired. Please Login Again.") {
+          MySharedPref.clearSession();
+          Get.offAllNamed(AppPages.LOGIN);
+        }
+      }
+    }).onError((error, stackTrace) {
+      debugPrint("IN hEEr4 ${error.toString()}");
+      Get.snackbar("Error", error.toString());
+    });
+  }
+
   Future<void> signup() async {
     if (namecontroller.text.trim().isEmpty) {
       showSnackbar("name");
@@ -23,7 +50,11 @@ class RegisterController extends GetxController {
     } else if (emailcontroller.text.trim().isEmpty) {
       showSnackbar("email");
       return;
-    } else if (emailcontroller.text.trim().isNotEmpty &&
+    } else if (phonecontroller.text.trim().isEmpty) {
+      showSnackbar("phone number");
+      return;
+    } 
+    else if (emailcontroller.text.trim().isNotEmpty &&
         !validateEmail(emailcontroller.text.trim())) {
       showSnackbar("valid email");
       return;
@@ -55,7 +86,7 @@ class RegisterController extends GetxController {
         "device_type": Platform.isAndroid ? "android" : "ios",
         "device_token": "12345"
       };
-      ApiService.register(data).then((res) {
+      ApiService.register(data).then((res) async{
         LoginResponseModel? resp = loginResponseModelFromJson(res);
         if (resp!.status!) {
           MySharedPref.setid(resp.data!.id.toString());
@@ -71,6 +102,7 @@ class RegisterController extends GetxController {
               snackPosition: SnackPosition.BOTTOM);
           isLoading(false);
           update();
+          await getSportsData();
           Get.offAllNamed(AppPages.HOME);
         } else {
           Get.snackbar("Server Response", "${resp.message}",

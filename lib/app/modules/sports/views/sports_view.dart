@@ -42,7 +42,12 @@ class SportsView extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children:
                                     List.generate(c.academies!.length, (index) {
-                                  return academyCard(c.academies![index]!.logo.toString(), c.academies![index]!.name.toString(), c.academies![index]!.description.toString());
+                                  return academyCard(
+                                      c.academies![index]!.logo.toString(),
+                                      c.academies![index]!.name.toString(),
+                                      c.academies![index]!.description
+                                          .toString(),
+                                      c.academies![index]!.id.toString());
                                 })),
                             getVerticalSpace(),
                             getVerticalSpace()

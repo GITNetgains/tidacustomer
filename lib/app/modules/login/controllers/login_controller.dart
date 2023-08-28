@@ -30,8 +30,8 @@ class LoginController extends GetxController {
         token.toString().trim() != "null") {
       isLoading(false);
       update();
-    // getCMSData();
-      getSportsData();
+      // getCMSData();
+      await getSportsData();
       Get.offAllNamed(AppPages.HOME);
     } else {
       print("--------------");
@@ -41,8 +41,7 @@ class LoginController extends GetxController {
     isLoading(false);
   }
 
-
- Future<void> getCMSData() async {
+  Future<void> getCMSData() async {
     // var data = {
     //   "userid": userId.toString(), //"3",
     //   "token": token //"dfdd92bea16946f54b1cfe794dca3db9",
@@ -69,8 +68,8 @@ class LoginController extends GetxController {
     //       });
     //     }
     //   }
-      // cms.CmsResModel? res = cms.cmsResModelFromJson(response);
-      /* debugPrint("IN hEEre1");
+    // cms.CmsResModel? res = cms.cmsResModelFromJson(response);
+    /* debugPrint("IN hEEre1");
       if (res.status!) {
 
       } else {
@@ -84,7 +83,6 @@ class LoginController extends GetxController {
     // });
   }
 
-
   Future<void> getSportsData() async {
     var data = {
       "userid": MySharedPref.getid(), //"3",
@@ -92,12 +90,11 @@ class LoginController extends GetxController {
     };
 
     await ApiService.getSportsData(data).then((response) {
-
       SportsDataResponse? res = sportsDataResponseFromJson(response);
       debugPrint("IN hEEre1");
       if (res!.status!) {
         debugPrint("IN hEEre");
-       MySharedPref.setsportsdata(response);
+        MySharedPref.setsportsdata(response);
         update();
       } else {
         debugPrint("IN hEEre3");
@@ -163,8 +160,8 @@ class LoginController extends GetxController {
               snackPosition: SnackPosition.BOTTOM);
           isLoading(false);
           update();
-    getCMSData();
-          getSportsData();
+          // getCMSData();
+          await getSportsData();
           Get.offAllNamed(AppPages.HOME);
         } else {
           isLoading(false);
