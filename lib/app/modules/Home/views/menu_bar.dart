@@ -102,8 +102,8 @@ class Menubar extends StatelessWidget {
               dense: true,
               leading: const Icon(Icons.calendar_month),
               title: setMediumLabel('Bookings'),
-              onTap: () {
-                // Get.toNamed(AppPages.);
+              onTap: () async{
+                await Get.toNamed(AppPages.ORDERS);
               },
             ),
             ListTile(
@@ -122,6 +122,7 @@ class Menubar extends StatelessWidget {
               leading: const Icon(Icons.school),
               title: setMediumLabel('Book Academy'),
               onTap: () async {
+                Get.toNamed(AppPages.ACADEMY_LIST);
                 // Get.toNamed(AppRoutes.academyList);
               },
             ),
@@ -131,6 +132,7 @@ class Menubar extends StatelessWidget {
               leading: const Icon(Icons.schedule),
               title: setMediumLabel('Book Slot'),
               onTap: () async {
+                Get.toNamed(AppPages.VENUE_LIST);
                 // Get.toNamed(AppRoutes.venueList);
               },
             ),
@@ -140,6 +142,7 @@ class Menubar extends StatelessWidget {
               leading: const Icon(Icons.vrpano),
               title: setMediumLabel('Book Experience'),
               onTap: () async {
+                Get.toNamed(AppPages.EXPERIENCE_LIST);
                 // Get.toNamed(AppPages.);
               },
             ),

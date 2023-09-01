@@ -24,7 +24,7 @@ String? userId, userName, token;
 
   bool? isBooking = true;
   RxBool isPinned = false.obs;
-  List<a.Tournaments> likedTournament = List.empty(growable: true);
+  List<a.Tournament> likedTournament = List.empty(growable: true);
 
   @override
   void onInit() {
@@ -82,10 +82,10 @@ String? userId, userName, token;
     userId = MySharedPref.getid();
     userName = MySharedPref.getName();
     token = MySharedPref.getauthtoken();
-    Map params = Get.parameters;
-    var id = params["id"];
-    tournamentId = id.toString();
-    debugPrint("params $params, id $id ");
+    // Map params = Get.parameters;
+    // var id = params["id"];
+    // tournamentId = id.toString();
+    // debugPrint("params $params, id $id ");
     fetchLikedTournaments();
   }
 
@@ -180,16 +180,23 @@ String? userId, userName, token;
     await ApiService.fetchLikedTournaments(data).then((response) {
       // print(data);
       // debugPrint("IN hEEre1${jsonDecode(response.body)}");
-      print(jsonDecode(response.body)["data"]);
-       fhsl = jsonDecode(response.body)["data"]["tournaments"].toString();
-      debugPrint(fhsl);
+      // print(jsonDecode(response.body)["data"]);
+       fhsl = jsonDecode(response.body);
+        print("----------sdfsd-f----------");
+      // debugPrint(fhsl.toString());
+      update();
       LikeResponseModel res =
-          LikeResponseModel.fromJson(jsonDecode(response.body));
+          LikeResponseModel.fromJson(fhsl);
           print(res.data!.tournaments![0].academyId);
       if (res.status== true) {
           // print(jsonDecode(response.body)["data"]["tournaments"][0]["is_like"]);
         likedTournament.addAll(res.data?.tournaments ?? []);
+        print("----------sdfsd-f----------");
+        print(likedTournament);
+        update();
       }
+      debugPrint(fhsl.toString());
+      update();
 
       isLoading = false;
       update();

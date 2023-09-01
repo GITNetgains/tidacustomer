@@ -32,6 +32,7 @@ class FacilitySlotsController extends GetxController
   String? slotId = "";
   int selectedSlot = -1;
   bool? isBooking = false;
+  String? venueid;
 
   bool isSameDay(DateTime? a, DateTime? b) {
     if (a == null || b == null) {
@@ -57,6 +58,7 @@ class FacilitySlotsController extends GetxController
     facilityId = id.toString();
     facilityname = params["title"];
     amt = params["amt"].toString();
+    venueid = params["venue_id"].toString();
     debugPrint("params $params, id $id ");
 
     await getFacilitySlots();
@@ -108,7 +110,8 @@ class FacilitySlotsController extends GetxController
       "token": token,
       "facility_id": facilityId,
       "facility_name": facilityname,
-      "date": selectedDate
+      "date": selectedDate,
+      "venue_id": venueid
     };
     debugPrint(data.toString());
     await ApiService.fetchFacilitySlots(data).then((response) {

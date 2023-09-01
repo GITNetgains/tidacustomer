@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +10,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await FastCachedImageConfig.init(clearCacheAfter: const Duration(hours: 2));
+ CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
   await MySharedPref.init();
 
   initializeDateFormatting().then((_) => runApp(ScreenUtilInit(

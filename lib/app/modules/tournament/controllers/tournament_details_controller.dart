@@ -26,7 +26,7 @@ class TournamentDetailsController extends GetxController
   bool? isLoading = false;
   bool? isBooking = true;
   RxBool isPinned = false.obs;
-  List<a.Tournaments?> likedTournament = List.empty(growable: true);
+  List<a.Tournament?> likedTournament = List.empty(growable: true);
   RxList<ss.Sponsors> sponserList = <ss.Sponsors>[].obs;
   Rx<YoutubePlayerController>? videoController;
   RxBool isVideoPlaying = false.obs;

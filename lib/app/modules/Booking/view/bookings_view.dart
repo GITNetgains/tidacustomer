@@ -4,97 +4,99 @@ import 'package:tida_customer/app/modules/Booking/controllers/orders_controller.
 import 'package:tida_customer/app/modules/orders/views/order_details.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
+import 'package:tida_customer/utils/common_utils.dart';
+import 'package:tida_customer/utils/constants.dart';
 
 import '../model/AllOrdersResponse.dart';
 
-class Bookings extends StatelessWidget {
-  Bookings({Key? key}) : super(key: key);
+class BookingsView extends StatelessWidget {
+  BookingsView({Key? key}) : super(key: key);
   final _c = Get.put(BookingController());
 
   @override
   Widget build(BuildContext context) {
-      return Scaffold(
-          backgroundColor: Colors.white.withOpacity(0.9),
-          appBar: AppBar(
-            backgroundColor: PRIMARY_COLOR,
-            title: setHeadlineLarge("Bookings", color: Colors.white),
-          ),
-          body: RefreshIndicator(
+    return Scaffold(
+        backgroundColor: Colors.white.withOpacity(0.9),
+        appBar: AppBar(
+          backgroundColor: PRIMARY_COLOR,
+          title: setHeadlineLarge("Bookings", color: Colors.white),
+        ),
+        body: RefreshIndicator(
             onRefresh: () async {
               return _c.fetchOrders();
             },
             child: Container(
-              child: Obx(() => _c.loading.value
-                  ? showLoader(
-                      hwidth: 80,
-                      hheight: 80,
-                      asset: "assets/animations/loading_anim.gif")
-                  : (_c.orderList.isNotEmpty
-                      ? ListView.builder(
-                          padding: const EdgeInsets.all(8),
-                          itemCount: _c.orderList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            Data d = _c.orderList[index];
-                            return InkWell(
-                              onTap: () {
-                                _c.index(index);
-                                Get.to(() => OrderDetails());
-                              },
-                              child: Card(
-                                elevation: 3,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              _getInfo("Order Id", d.id ?? ""),
-                                              _getInfo("Order Type",
-                                                  '${_getOrderType(d.type ?? "")}'),
-                                              _getInfo(
-                                                  "Order Status",
-                                                  (d.status == "1"
-                                                      ? "Completed"
-                                                      : "Pending")),
-                                              _getInfo(
-                                                  "Amount",
-                                                  (d.amount != null)
-                                                      ? "₹${d.amount}"
-                                                      : "-"),
-                                              _getInfo(
-                                                  "Date",
-                                                  getFormattedDate1(
-                                                      d.orderDate ?? "")),
-                                              _getInfo(
-                                                  "Time",
-                                                  getFormattedTime(
-                                                          d.orderDate ?? "")
-                                                      .toUpperCase()),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+              child: Obx(
+                () => basebody(
+                    _c.loading.value,
+                    (_c.orderList.isNotEmpty
+                        ? ListView.builder(
+                            padding: const EdgeInsets.all(8),
+                            itemCount: _c.orderList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              Data d = _c.orderList[index];
+                              return InkWell(
+                                onTap: () {
+                                  _c.index(index);
+                                  Get.to(() => OrderDetails());
+                                },
+                                child: Card(
+                                  elevation: 3,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                _getInfo(
+                                                    "Order Id", d.id ?? ""),
+                                                _getInfo("Order Type",
+                                                    '${_getOrderType(d.type ?? "")}'),
+                                                _getInfo(
+                                                    "Order Status",
+                                                    (d.status == "1"
+                                                        ? "Completed"
+                                                        : "Pending")),
+                                                _getInfo(
+                                                    "Amount",
+                                                    (d.amount != null)
+                                                        ? "₹${d.amount}"
+                                                        : "-"),
+                                                _getInfo(
+                                                    "Date",
+                                                    getFormattedDate1(
+                                                        d.orderDate ?? "")),
+                                                _getInfo(
+                                                    "Time",
+                                                    getFormattedTime(
+                                                            d.orderDate ?? "")
+                                                        .toUpperCase()),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          })
-                      : Center(
-                          child: setMediumLabel(
-                              "No order available. Please check back later."),
-                        ))),
-            ),
-          ));
+                              );
+                            })
+                        : Center(
+                            child: setMediumLabel(
+                                "No order available. Please check back later."),
+                          ))),
+              ),
+            )));
   }
 
   _getOrderType(String type) {

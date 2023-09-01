@@ -17,9 +17,7 @@ class PinnedView extends StatelessWidget {
             backgroundColor: PRIMARY_COLOR,
             title: setHeadlineMedium("Library", color: Colors.white),
           ),
-          body:
-              // Text(c.fhsl)
-              RefreshIndicator(
+          body: RefreshIndicator(
             onRefresh: c.fetchLikedTournaments,
             child: basebody(
               c.isLoading,
@@ -28,7 +26,7 @@ class PinnedView extends StatelessWidget {
                       children:
                           List.generate(c.likedTournament.length, (index) {
                         return tournamentcard(
-                            c.likedTournament[index]!.image.toString(),
+                            c.likedTournament[index].image.toString(),
                             c.likedTournament[index].title.toString(),
                             c.likedTournament[index].description.toString(),
                             c.likedTournament[index].id.toString());

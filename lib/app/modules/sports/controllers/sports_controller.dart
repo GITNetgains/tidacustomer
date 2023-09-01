@@ -7,11 +7,13 @@ class SportsController extends GetxController {
   List<Academy?>? academies = List.empty(growable: true);
   RxString userid = "".obs;
   RxString authtoken = "".obs;
-  RxString radius = "10".obs;
+  RxString radius = "100".obs;
   RxString sport = "".obs;
   RxString sportname = "".obs;
   RxBool showNoData = false.obs;
   RxBool isLoading = false.obs;
+
+
   @override
   void onInit() {
     init();
@@ -19,7 +21,7 @@ class SportsController extends GetxController {
   }
 
   Future<void> init() async {
-    getdata();
+    await getdata();
   }
 
   bool? isProperString(String? s) {
@@ -43,6 +45,7 @@ class SportsController extends GetxController {
     if (isProperString(longi)!) {
       longi = longi.toString();
     }
+        clearLists();
     var data = {
       "userid": userid.value.toString(),
       "token": authtoken.value,
@@ -55,16 +58,16 @@ class SportsController extends GetxController {
       NearbyDataResponse? res = nearbyDataResponseFromJson(respnse);
       if(res!.status!)
       {
-        clearLists();
          academies!.addAll(res.data!.academy!);
-         print(academies);
          update();
+         print(academies);
+      showNoData(false);
       }
-      else {
-        clearLists();
-      }
+      // else {
+      //   clearLists();
+      // }
     }).onError((error, stackTrace) {
-      clearLists();
+      // clearLists();
       Get.snackbar("Error", error.toString());
     });
     if (academies?.isEmpty?? true) {

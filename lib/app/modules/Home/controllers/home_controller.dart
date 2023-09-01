@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:geolocator/geolocator.dart';
@@ -25,7 +24,7 @@ class HomeController extends GetxController {
   String? lati;
   String? longi;
   RxBool btnLoader = false.obs;
-  RxString city = "Chandigarh".obs;
+  RxString city = "Select Location".obs;
   RxBool showLocLoader = false.obs;
   RxBool isLoading = false.obs;
   RxBool showData = false.obs;
@@ -142,12 +141,9 @@ class HomeController extends GetxController {
     radius.value = MySharedPref.getradius().toString();
     clearList();
     sportsdata();
-    if(getloc.value == true)
-    {
-    _determinePosition();
-    }
-    else
-    {
+    if (getloc.value == true) {
+      _determinePosition();
+    } else {
       getData();
     }
   }
@@ -270,11 +266,11 @@ class HomeController extends GetxController {
     await ApiService.getSearchNearByLoc(data).then((response) {
       NearbyDataResponse? res = nearbyDataResponseFromJson(response);
       if (res!.status!) {
-        venueshomelist!.addAll(res.data!.venue!);
-        academies!.addAll(res.data!.academy!);
-        tournamentslist!.addAll(res.data!.tournament!);
+        venueshomelist!.addAll(res.data!.venue!.take(10));
+        academies!.addAll(res.data!.academy!.take(10));
+        tournamentslist!.addAll(res.data!.tournament!.take(10));
         tournamentslist = tournamentslist!.reversed.toList();
-        experienceslist!.addAll(res.data!.experience!);
+        experienceslist!.addAll(res.data!.experience!.take(10));
         update();
       } else {
         debugPrint("IN hEEre3");
@@ -328,7 +324,8 @@ class HomeController extends GetxController {
       update();
     });
   }
-   Future updateImageVariable() async {
+
+  Future updateImageVariable() async {
     try {
       avatar = await MySharedPref.getavatar();
       name = await MySharedPref.getName();

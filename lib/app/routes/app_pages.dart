@@ -1,8 +1,11 @@
 import 'package:get/get.dart';
+import 'package:tida_customer/app/modules/Booking/view/bookings_view.dart';
 import 'package:tida_customer/app/modules/Home/bindings/home_binding.dart';
 import 'package:tida_customer/app/modules/Home/views/home_view.dart';
 import 'package:tida_customer/app/modules/Pinned/bindings/pinned_binding.dart';
 import 'package:tida_customer/app/modules/Pinned/views/Pinned_View.dart';
+import 'package:tida_customer/app/modules/about_us/bindings/about_us_binding.dart';
+import 'package:tida_customer/app/modules/about_us/views/about_us_view.dart';
 import 'package:tida_customer/app/modules/academy/bindings/academy_binding.dart';
 import 'package:tida_customer/app/modules/academy/bindings/academy_full_details_binding.dart';
 import 'package:tida_customer/app/modules/academy/views/academy_full_details_view.dart';
@@ -19,6 +22,7 @@ import 'package:tida_customer/app/modules/filter_search/bindings/filter_search_b
 import 'package:tida_customer/app/modules/filter_search/view/filter_view.dart';
 import 'package:tida_customer/app/modules/login/bindings/login_bindings.dart';
 import 'package:tida_customer/app/modules/login/views/login_view.dart';
+import 'package:tida_customer/app/modules/orders/views/order_details.dart';
 import 'package:tida_customer/app/modules/profile/bindings/Profile_binding.dart';
 import 'package:tida_customer/app/modules/profile/views/profile_view.dart';
 import 'package:tida_customer/app/modules/register/bindings/register_binding.dart';
@@ -29,6 +33,8 @@ import 'package:tida_customer/app/modules/settings/bindings/settings_bindings.da
 import 'package:tida_customer/app/modules/settings/views/settings_view.dart';
 import 'package:tida_customer/app/modules/sports/bindings/sports_binding.dart';
 import 'package:tida_customer/app/modules/sports/views/sports_view.dart';
+import 'package:tida_customer/app/modules/tnc/bindings/tnc_binding.dart';
+import 'package:tida_customer/app/modules/tnc/views/tnc_view.dart';
 import 'package:tida_customer/app/modules/tournament/bindings/tournament_details_binding.dart';
 import 'package:tida_customer/app/modules/tournament/bindings/tournament_list_binding.dart';
 import 'package:tida_customer/app/modules/tournament/views/tournament_details_view.dart';
@@ -39,9 +45,8 @@ import 'package:tida_customer/app/modules/venue/views/venue_full_details_view.da
 import 'package:tida_customer/app/modules/venue/views/venue_list_view.dart';
 part 'app_routes.dart';
 
-class AppPages
-{
-   AppPages._();
+class AppPages {
+  AppPages._();
   static const INITIAL = Routes.LOGIN;
   static const LOGIN = Routes.LOGIN;
   static const REGISTER = Routes.REGISTER;
@@ -67,7 +72,8 @@ class AppPages
   static const PP = Routes.PP;
   static const SETTINGS = Routes.SETTINGS;
   static const PINNED = Routes.PINNED;
-   static final routes = [
+  static const ORDERS = Routes.ORDERS;
+  static final routes = [
     GetPage(
       name: _Paths.LOGIN,
       page: () => const LoginView(),
@@ -108,7 +114,7 @@ class AppPages
       page: () => const VenueListView(),
       binding: VenueListBinding(),
     ),
-     GetPage(
+    GetPage(
       name: _Paths.VENUE_FULL_DETAILS,
       page: () => const VenueFullDetailsView(),
       binding: VenueFullDetailsBinding(),
@@ -168,5 +174,20 @@ class AppPages
       page: () => const PinnedView(),
       binding: PinnedBinding(),
     ),
-   ];
+    GetPage(
+      name: _Paths.ORDERS,
+      page: () => BookingsView(),
+      binding: PinnedBinding(),
+    ),
+    GetPage(
+      name: _Paths.ABOUT_US,
+      page: () => const AboutUsView(),
+      binding: AboutUsBinding(),
+    ),
+     GetPage(
+      name: _Paths.TNC,
+      page: () => const TNCView(),
+      binding: TNCBinding(),
+    ),
+  ];
 }

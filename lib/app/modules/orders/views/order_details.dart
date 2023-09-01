@@ -4,6 +4,8 @@ import 'package:tida_customer/app/modules/Booking/controllers/orders_controller.
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
 
+import '../../../../utils/constants.dart';
+
 
 class OrderDetails extends StatelessWidget {
   OrderDetails({Key? key}) : super(key: key);
@@ -23,7 +25,7 @@ class OrderDetails extends StatelessWidget {
               ? showLoader(
                   hwidth: 80,
                   hheight: 80,
-                  asset: "assets/animations/loading_anim.gif")
+                  asset: AppImages.overallloading)
               : ListView(
                   children: [
                     Padding(

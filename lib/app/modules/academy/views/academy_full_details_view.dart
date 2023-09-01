@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:tida_customer/app/components/app_bottom_sheet.dart';
 import 'package:tida_customer/app/components/no_data.dart';
 import 'package:tida_customer/app/modules/academy/controllers/academy_full_details_controller.dart';
+import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
 import 'package:tida_customer/utils/common_utils.dart';
@@ -80,7 +81,7 @@ class AcademyFullDetailsView extends StatelessWidget {
                                         )
                                       ]),
                         Padding(
-                          padding:  EdgeInsets.only(top:8.h, left: 10.w),
+                          padding: EdgeInsets.only(top: 8.h, left: 10.w),
                           child: ListView(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
@@ -132,7 +133,7 @@ class AcademyFullDetailsView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Padding(
-                                      padding:  EdgeInsets.symmetric(
+                                      padding: EdgeInsets.symmetric(
                                           vertical: 8.0.h, horizontal: 8.w),
                                       child: setMediumLabel(
                                           c.acDescription!.capitalizeFirst ??
@@ -168,11 +169,13 @@ class AcademyFullDetailsView extends StatelessWidget {
                                         c.academies?.first?.skillLevel ?? ""),
                                     displayView(
                                         "Assistant Coach Name",
-                                        c.academies?.first?.assistentCoachName ??
+                                        c.academies?.first
+                                                ?.assistentCoachName ??
                                             ""),
                                     displayView(
                                         "Assist. Coaches",
-                                        c.academies?.first?.noOfAssistentCoach ??
+                                        c.academies?.first
+                                                ?.noOfAssistentCoach ??
                                             ""),
                                     displayView(
                                         "Coach Exp(Years)",
@@ -525,6 +528,7 @@ class AcademyFullDetailsView extends StatelessWidget {
                                   child: InkWell(
                                 onTap: () {
                                   // Get.toNamed(AppRoutes.tnc);
+                                  Get.toNamed(AppPages.TNC);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -551,7 +555,7 @@ class AcademyFullDetailsView extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(Get.context!).size.width,
       child: Padding(
-        padding:  EdgeInsets.only(top: 8.0.h, left: 10.w),
+        padding: EdgeInsets.only(top: 8.0.h, left: 10.w),
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -562,7 +566,7 @@ class AcademyFullDetailsView extends StatelessWidget {
                 width: MediaQuery.of(Get.context!).size.width * 0.23,
                 child: setCardHeading('$lbl:', fontSize: 13.sp),
               ),
-               SizedBox(
+              SizedBox(
                 width: 5.w,
               ),
               SizedBox(

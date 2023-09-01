@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:tida_customer/utils/common_utils.dart';
+import 'package:tida_customer/utils/constants.dart';
 
 const double XSMALL_PADDING = 3;
 const double SMALL_PADDING = 5;
@@ -465,62 +466,6 @@ String getFormattedDateTime1(String date) {
   return dd;
 }
 
-Widget getFooter(String lat, String lng) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      Container(
-        decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-        width: MediaQuery.of(Get.context!).size.width * 0.44,
-        child: InkWell(
-          onTap: () {
-            makePhoneCall("+918195944444");
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.call,
-                color: Colors.red,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: setSmallLabel("Call Us"),
-              ),
-            ],
-          ),
-        ),
-      ),
-      getHorizontalSpace(),
-      InkWell(
-        onTap: () {
-          openMap(lat, lng);
-        },
-        child: Container(
-          decoration: BoxDecoration(border: Border.all(color: Colors.red)),
-          width: MediaQuery.of(Get.context!).size.width * 0.44,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Icon(
-                  Icons.directions,
-                  color: Colors.red,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: setSmallLabel("View on map"),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ],
-  );
-}
 
 Widget showLoading() {
   Random rnd;
@@ -539,7 +484,7 @@ Widget showLoading() {
   return Padding(
     padding: const EdgeInsets.only(bottom: 0.0),
     child: Center(
-      child: Image.asset("assets/animations/loading_anim_overall.gif", height: 150, width: 150,)
+      child: Image.asset(AppImages.loading, height: 150, width: 150,)
       // Lottie.asset(
       //   'assets/animations/${animation[r]}',
       //   height: 100,

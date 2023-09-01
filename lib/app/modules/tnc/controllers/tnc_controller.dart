@@ -1,28 +1,19 @@
 import 'dart:convert';
 
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
 import 'package:tida_customer/app/data/local/my_shared_pref.dart';
 import 'package:tida_customer/app/data/models/pages_response_model.dart';
 import 'package:tida_customer/app/data/remote/api_service.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class SettingsController extends GetxController
+class TNCController extends GetxController
 {
-  String? aboutUsPageText = "";
-  String? tncPageText = "";
-  String? ppPageText = "";
-  String? faq = "";
+  RxString tncPageText = "".obs;
 
-@override
-  void onInit() async{
-    await getCMSData();
+  @override
+  void onInit() async
+  {
+   await getCMSData();
     super.onInit();
-  }
-
-  Future launchurl(Uri _url) async {
-    if (!await launchUrl(_url)) {
-      throw Exception('Could not launch $_url');
-    }
   }
   Future<void> getCMSData() async {
     var data = {
@@ -36,17 +27,10 @@ class SettingsController extends GetxController
       if (r.status == true) {
         if (r.data != null) {
           r.data?.forEach((element) {
-            if (element.title.toString().toLowerCase().contains("about")) {
-              aboutUsPageText = element.description;
-            }
+            
             if (element.title.toString().toLowerCase().contains("terms")) {
-              tncPageText = element.description;
-            }
-            if (element.title.toString().toLowerCase().contains("privacy")) {
-              ppPageText = element.description;
-            }
-            if (element.title.toString().toLowerCase().contains("faq")) {
-              faq = element.description;
+              tncPageText.value = element.description ?? "";
+              update();
             }
           });
         }

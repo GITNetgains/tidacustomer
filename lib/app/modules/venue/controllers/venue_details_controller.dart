@@ -111,6 +111,7 @@ class VenueFullDetailsController extends GetxController {
               if (!groupedFacilities.containsKey(title)) {
                 groupedFacilities[title] = [];
                 facilites!.add(facility);
+                print(facilites);
               }
 
               // Add the facility to the list for the title.

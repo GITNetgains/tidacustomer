@@ -343,4 +343,14 @@ static Future getSearchDataByText(Map data) async {
     responseJson = returnResponse(response);
     return responseJson;
   }
+  static Future<http.Response> getCMS(Map data) async {
+    var client = http.Client();
+    dynamic responseJson;
+    final response = await client.post(
+        Uri.parse(ApiInterface.baseUrl + Endpoints.cmsApiGetAllData),
+
+        body: /*jsonEncode(*/data/*)*/);
+    //responseJson = returnResponse(response);
+    return response;
+  }
 }

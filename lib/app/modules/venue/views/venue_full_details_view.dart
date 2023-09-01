@@ -464,6 +464,11 @@ class VenueFullDetailsView extends StatelessWidget {
                                                                         index]!
                                                                     .title
                                                                     .toString(),
+                                                                "venue_id": c
+                                                                    .venues![
+                                                                        0]!
+                                                                    .id
+                                                                    .toString()
                                                               });
                                                         },
                                                         child: Column(
@@ -541,7 +546,7 @@ class VenueFullDetailsView extends StatelessWidget {
                                           Center(
                                               child: InkWell(
                                                   onTap: () {
-                                                    // Get.toNamed(AppRoutes.tnc);
+                                                    Get.toNamed(AppPages.TNC);
                                                   },
                                                   child: setSmallLabel(
                                                     "Terms & Conditions apply",

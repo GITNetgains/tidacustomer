@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +7,7 @@ import 'package:tida_customer/app/modules/Home/controllers/home_controller.dart'
 import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
+import 'package:tida_customer/utils/constants.dart';
 
 Widget academyCard(String url, String name, String description, String id,
     {double verticalmargin = 5}) {
@@ -207,6 +209,35 @@ Widget experincecard(String url, String name, String description, String id,
   );
 }
 
+Widget sportsimagewidget([String url = "https://tidasports.com/secure/uploads/tbl_venue/20230824211450-2023-08-24tbl_venue211448.jpg"])
+{
+  return Container(
+    color: Colors.white,
+    child: SizedBox(
+      //  height:  MediaQuery.of(Get.context!).size.width/2,
+      child: CachedNetworkImage(
+       imageUrl: url,
+        fit: BoxFit.cover,
+        memCacheHeight: 180,
+        memCacheWidth: 180,
+        height: 180.h,
+        width: 180.w,
+        fadeInDuration: const Duration(seconds: 1),
+        errorWidget: (context, exception, stacktrace) {
+          return Text(stacktrace.toString());
+        },
+        progressIndicatorBuilder: (context,url, progress) {
+          return Image.asset(
+            AppImages.loading,
+            height: 180.h,
+            width: 180.w,
+          );
+        }, 
+      ),
+    ),
+  );
+}
+
 Widget getImagewidget(
     [String url =
         "https://tidasports.com/secure/uploads/tbl_venue/20230824211450-2023-08-24tbl_venue211448.jpg"]) {
@@ -214,22 +245,24 @@ Widget getImagewidget(
     color: Colors.white,
     child: SizedBox(
       //  height:  MediaQuery.of(Get.context!).size.width/2,
-      child: FastCachedImage(
-        url: url,
+      child: CachedNetworkImage(
+       imageUrl: url, //"https://res.cloudinary.com/dnp3cguhl/image/upload/v1692563958/download_d2e6e1ef03.jpg",
         fit: BoxFit.cover,
+        memCacheHeight: 400,
+        memCacheWidth: 800,
         height: 180.h,
         width: 500.w,
         fadeInDuration: const Duration(seconds: 1),
-        errorBuilder: (context, exception, stacktrace) {
+        errorWidget: (context, exception, stacktrace) {
           return Text(stacktrace.toString());
         },
-        loadingBuilder: (context, progress) {
+        progressIndicatorBuilder: (context,url, progress) {
           return Image.asset(
-            "assets/animation/loading_anim_overall.gif",
+            AppImages.loading,
             height: 180.h,
             width: 500.w,
           );
-        },
+        }, 
       ),
     ),
   );
@@ -330,36 +363,38 @@ Widget getvenueimagewidget(
     color: Colors.white,
     child: SizedBox(
       //  height:  MediaQuery.of(Get.context!).size.width/2,
-      child: FastCachedImage(
-        url: url,
+      child: CachedNetworkImage(
+       imageUrl: url,
+        fit: BoxFit.cover,
+        memCacheHeight: 500,
+        memCacheWidth: 1000,
         // height: 180.h,
         // width: 500.w,
-        fit: BoxFit.cover,
         fadeInDuration: const Duration(seconds: 1),
-        errorBuilder: (context, exception, stacktrace) {
+        errorWidget: (context, exception, stacktrace) {
           return Text(stacktrace.toString());
         },
-        loadingBuilder: (context, progress) {
+        progressIndicatorBuilder: (context,url, progress) {
           return Image.asset(
-            "assets/animation/loading_anim_overall.gif",
+            AppImages.loading,
             // height: 180.h,
             // width: 500.w,
           );
-        },
+        }, 
       ),
     ),
   );
 }
 
-Widget sportsCard(HomeController c, index) {
+Widget sportsCard(id,name,image) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 08),
     child: InkWell(
         onTap: () {
           debugPrint("ON SP TAPPED");
           Get.toNamed(AppPages.SPORTS, parameters: {
-            "id": c.sportslist![index]!.id!.toString(),
-            "name": c.sportslist![index]!.sportName!.toString()
+            "id": id,
+            "name": name
           });
         },
         child: Container(
@@ -376,7 +411,7 @@ Widget sportsCard(HomeController c, index) {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                c.sportslist!.isEmpty
+                image == null 
                     ? const Icon(
                         Icons.sports_cricket,
                         color: PRIMARY_COLOR,
@@ -385,10 +420,10 @@ Widget sportsCard(HomeController c, index) {
                         width: 50.h,
                         height: 50.h,
                         child: ClipRRect(
-                            child: getImagewidget(
-                                c.sportslist![index]!.sportIcon ?? ""))),
+                            child: sportsimagewidget(
+                                image))),
                 //SizedBox(height: 12.0,),
-                setSmallLabel(c.sportslist![index]!.sportName ?? "Cricket")
+                setSmallLabel(name ?? "Cricket")
               ],
             ),
           ),

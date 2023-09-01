@@ -25,6 +25,7 @@ abstract class Routes {
   static const FAQ = _Paths.FAQ;
   static const SETTINGS = _Paths.SETTINGS;
   static const PINNED = _Paths.PINNED;
+  static const ORDERS = _Paths.ORDERS;
 }
 abstract class _Paths {
     _Paths._();
@@ -52,4 +53,5 @@ abstract class _Paths {
   static const FAQ = "/faq";
   static const SETTINGS = "/settings";
   static const PINNED = "/pinned";
+  static const ORDERS = "/orders";
 }

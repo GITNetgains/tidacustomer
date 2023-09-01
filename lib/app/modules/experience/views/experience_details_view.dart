@@ -8,6 +8,8 @@ import 'package:tida_customer/utils/color_utils.dart';
 import 'package:tida_customer/utils/common_utils.dart';
 import 'package:tida_customer/utils/custom_cards.dart';
 
+import '../../../routes/app_pages.dart';
+
 class ExperienceDetailsView extends StatelessWidget {
   const ExperienceDetailsView({Key? key}) : super(key: key);
 
@@ -150,6 +152,7 @@ class ExperienceDetailsView extends StatelessWidget {
                                 child: InkWell(
                                     onTap: () {
                                       // Get.toNamed(AppRoutes.tnc);
+                                      Get.toNamed(AppPages.TNC);
                                     },
                                     child: setXSmallLabel(
                                       "Terms & Conditions apply",

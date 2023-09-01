@@ -25,7 +25,10 @@ class SettingsView extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Get.toNamed(AppPages.ABOUT_US);
+                    Get.toNamed(AppPages.ABOUT_US, parameters: {
+                      "appbartext": "About Us",
+                      "inputtext": c.aboutUsPageText.toString()
+                    });
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -35,7 +38,10 @@ class SettingsView extends StatelessWidget {
                 const Divider(),
                 InkWell(
                   onTap: () {
-                    Get.toNamed(AppPages.ABOUT_US);
+                    Get.toNamed(AppPages.ABOUT_US, parameters: {
+                      "appbartext": "Frequently Asked Questions",
+                      "inputtext": c.faq.toString()
+                    });
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -45,7 +51,10 @@ class SettingsView extends StatelessWidget {
                 const Divider(),
                 InkWell(
                   onTap: () {
-                    Get.toNamed(AppPages.ABOUT_US);
+                    Get.toNamed(AppPages.ABOUT_US, parameters: {
+                      "appbartext": "Terms & Conditions",
+                      "inputtext": c.tncPageText.toString()
+                    });
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -55,11 +64,16 @@ class SettingsView extends StatelessWidget {
                 const Divider(),
                 InkWell(
                   onTap: () {
-                    Get.toNamed(AppPages.ABOUT_US);
+                    Get.toNamed(AppPages.ABOUT_US, parameters: {
+                      "appbartext": "Privacy Policy",
+                      "inputtext": c.ppPageText.toString()
+                    });
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: setMediumLabel("Privacy Policy"),
+                    child: setMediumLabel(
+                      "Privacy Policy",
+                    ),
                   ),
                 ),
                 const Divider(),

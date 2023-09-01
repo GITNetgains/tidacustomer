@@ -29,6 +29,5 @@ class Endpoints {
   static const DELETE_ACCOUNT = "/Userapi/disableProfile";
   static const CHANGE_PASSWORD = "/partner_user/changepassword";
   static const orderApigGtAllData = "/Order_api/getAllData";
-
-
+  static const cmsApiGetAllData = "/Cms_api/getAllData";
 }

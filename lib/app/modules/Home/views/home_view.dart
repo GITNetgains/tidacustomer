@@ -8,6 +8,7 @@ import 'package:tida_customer/app/modules/Home/views/menu_bar.dart';
 import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
+import 'package:tida_customer/utils/constants.dart';
 import 'package:tida_customer/utils/custom_cards.dart';
 
 class HomeView extends StatelessWidget {
@@ -54,7 +55,7 @@ class HomeView extends StatelessWidget {
       preferredSize: Size(double.infinity, 80.h),
       child: Container(
         padding: const EdgeInsets.all(15).h,
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
             color: PRIMARY_COLOR,
             borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(22.r),
@@ -88,42 +89,44 @@ class HomeView extends StatelessWidget {
   Widget locationselection(BuildContext context) {
     return GetBuilder<HomeController>(builder: (c) {
       return InkWell(
-                            onTap: () {
-                             c.handlePressButton(context);
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  c.isLoading == true
-                                      ? showLoader(hwidth: 80, hheight: 80, asset: "assets/animations/loading_anim.gif")
-                                      // const CircularProgressIndicator(
-                                      //     color: Colors.red,
-                                      //   )
-                                      : Row(
-                                          children: const [
-                                            Icon(
-                                              Icons.location_on,
-                                              color: Colors.red,
-                                              size: 24,
-                                            ),
-                                          ],
-                                        ),
-                                  getHorizontalSpace(),
-                                  Expanded(
-                                      child: Row(
-                                        children: [
-                                          setMediumLabel(
-                                              (c.city.value?.toString().trim()??"").isEmpty?"Select Location": c.city.value!,
-                                              color: Colors.red),
-                                          (c.city.value?.toString().trim()??"").isEmpty?Container(): setSmallLabel(" (Edit) ", color: Colors.black)
-                                        ],
-                                      )),
-                                ],
-                              ),
-                            ),
-                          );
+        onTap: () {
+          c.handlePressButton(context);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              c.isLoading == true
+                  ? showLoader(
+                      hwidth: 80, hheight: 80, asset: AppImages.overallloading)
+                  : Row(
+                      children: const [
+                        Icon(
+                          Icons.location_on,
+                          color: Colors.red,
+                          size: 24,
+                        ),
+                      ],
+                    ),
+              getHorizontalSpace(),
+              Expanded(
+                  child: Row(
+                children: [
+                  setMediumLabel(
+                      (c.city.value?.toString().trim() ?? "").isEmpty
+                          ? "Select Location"
+                          : c.city.value!,
+                      color: Colors.red),
+                  (c.city.value?.toString().trim() ?? "").isEmpty
+                      ? Container()
+                      : setSmallLabel(" (Edit) ", color: Colors.black)
+                ],
+              )),
+            ],
+          ),
+        ),
+      );
     });
   }
 
@@ -210,7 +213,7 @@ class HomeView extends StatelessWidget {
       return Column(
         children: [
           Padding(
-            padding:  EdgeInsets.only(top: 8.0.h, left: 8.0.w, right: 8.0.w),
+            padding: EdgeInsets.only(top: 8.0.h, left: 8.0.w, right: 8.0.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -242,7 +245,8 @@ class HomeView extends StatelessWidget {
                     return academyCard(
                         c.academies![index]!.logo.toString(),
                         c.academies![index]!.name.toString(),
-                        c.academies![index]!.address.toString(), c.academies![index]!.id.toString());
+                        c.academies![index]!.address.toString(),
+                        c.academies![index]!.id.toString());
                   })),
           ),
         ],
@@ -287,7 +291,8 @@ class HomeView extends StatelessWidget {
                     return tournamentcard(
                         c.tournamentslist![index]!.image.toString(),
                         c.tournamentslist![index]!.title.toString(),
-                        c.tournamentslist![index]!.description.toString(), c.tournamentslist![index]!.id.toString());
+                        c.tournamentslist![index]!.description.toString(),
+                        c.tournamentslist![index]!.id.toString());
                   })),
           ),
         ],
@@ -306,14 +311,6 @@ class HomeView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 setHeadlineMedium("Popular Sports"),
-                c.sportslist!.isEmpty
-                    ? Container()
-                    : InkWell(
-                        onTap: () {
-                          // Get.toNamed(AppRoutes.academyList);
-                        },
-                        child: setHeadlineMedium("See All",
-                            color: PRIMARY_COLOR, fontSize: SMALL_FONT))
               ],
             ),
           ),
@@ -328,7 +325,10 @@ class HomeView extends StatelessWidget {
                   )
                 : Row(
                     children: List.generate(c.sportslist!.length, (index) {
-                    return sportsCard(c, index);
+                    return sportsCard(
+                        c.sportslist![index]!.id.toString(),
+                        c.sportslist![index]!.sportName.toString(),
+                        c.sportslist![index]!.sportIcon.toString());
                   })),
           ),
         ],
@@ -386,7 +386,7 @@ class HomeView extends StatelessWidget {
       return Column(
         children: [
           Padding(
-            padding:  EdgeInsets.only(top: 8.0.h, left: 8.0.w, right: 8.0.w),
+            padding: EdgeInsets.only(top: 8.0.h, left: 8.0.w, right: 8.0.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -418,7 +418,7 @@ class HomeView extends StatelessWidget {
                     return experincecard(
                         c.experienceslist![index]!.image.toString(),
                         c.experienceslist![index]!.title.toString(),
-                        c.experienceslist![index]!.description.toString(), 
+                        c.experienceslist![index]!.description.toString(),
                         c.experienceslist![index]!.id.toString());
                   })),
           ),

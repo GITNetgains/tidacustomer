@@ -7,4 +7,6 @@ class AppImages{
   static String get kinstagramicon => 'assets/icons/instagram.png';
   static String get kyoutubeicon => 'assets/icons/youtube.png';
   static String get klinkedinicon => 'assets/icons/linkedIn.png';
+  static String get loading => 'assets/animation/loading_anim_overall.gif';
+  static String get overallloading => 'assets/animation/loading_anim.gif';
 }
