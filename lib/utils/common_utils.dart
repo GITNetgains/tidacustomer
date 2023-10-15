@@ -1,21 +1,24 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:map_launcher/map_launcher.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-void openMap(lat, lon) {
+void openMap(lat, lon, place) {
+  String title = "";
   if (isProperString(lat)! &&
       isProperString(lon)! &&
       double.tryParse(lat) != null &&
       double.tryParse(lon) != null) {
     if (Platform.isAndroid) {
-      navigateTo(double.parse(lat), double.parse(lon));
+      navigateTo(double.parse(lat), double.parse(lon), place ?? title);
     } else {
-      launchMaps(double.parse(lat), double.parse(lon));
+      navigateTo(double.parse(lat), double.parse(lon), place ?? title);
     }
   } else {
     debugPrint("Cant launch..");
@@ -26,14 +29,33 @@ void openMap(lat, lon) {
         duration: const Duration(seconds: 5));
   }
 }
-void navigateTo(double lat, double lng) async {
-  var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
-  if (await canLaunchUrlString(uri.toString())) {
-    await launchUrlString(uri.toString());
-  } else {
-    throw 'Could not launch ${uri.toString()}';
+
+void navigateTo(double lat, double lng, String title) async {
+  try {
+    print("------------");
+
+    final availableMaps = await MapLauncher.installedMaps;
+    print(
+        availableMaps); // [AvailableMap { mapName: Google Maps, mapType: google }, ...]
+
+    if (Platform.isIOS) {
+      await MapLauncher.showDirections(
+        mapType: MapType.apple,
+        destination: Coords(lat, lng),
+        destinationTitle: title,
+      );
+    } else {
+      await MapLauncher.showDirections(
+        destinationTitle: title,
+        mapType: MapType.google,
+        destination: Coords(lat, lng),
+      );
+    }
+  } catch (e) {
+    throw e;
   }
 }
+
 launchMaps(lat, lon) async {
   String googleUrl = 'comgooglemaps://?center=$lat,$lon';
   String appleUrl = 'https://maps.apple.com/?sll=$lat,$lon';
@@ -54,6 +76,7 @@ bool validateEmail(String value) {
   RegExp regex = RegExp(pattern.toString());
   return (!regex.hasMatch(value)) ? false : true;
 }
+
 Future<void> makePhoneCall(String phoneNumber) async {
   try {
     final Uri launchUri = Uri(
@@ -89,14 +112,15 @@ bool? isPasswordCompliant(String password, [int minLength = 8]) {
       hasMinLength;
 }
 
-
-Widget basebody(bool isLoading, Widget widget)
-{
+Widget basebody(bool isLoading, Widget widget) {
   return AbsorbPointer(
     absorbing: isLoading,
-    child:  isLoading ?  Center(child: Image.asset(AppImages.overallloading)) : widget/*Stack(
+    child: isLoading
+        ? Center(child: Image.asset(AppImages.overallloading))
+        : widget /*Stack(
       children: [widget],
-    )*/,
+    )*/
+    ,
   );
 }
 
@@ -109,7 +133,7 @@ bool? isProperString(String? s) {
   return false;
 }
 
-Widget getFooter(String lat, String lng) {
+Widget getFooter(String lat, String lng, String place) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,7 +163,7 @@ Widget getFooter(String lat, String lng) {
       getHorizontalSpace(),
       InkWell(
         onTap: () {
-          openMap(lat, lng);
+          openMap(lat, lng, place);
         },
         child: Container(
           decoration: BoxDecoration(border: Border.all(color: Colors.red)),

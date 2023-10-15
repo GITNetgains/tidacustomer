@@ -12,9 +12,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../models/tournament_list_reponse.dart' as ss;
 import '../models/LikedTournamentResponse.dart' as a;
 
-
-class TournamentDetailsController extends GetxController
-{
+class TournamentDetailsController extends GetxController {
   String? userId, userName, token;
   List<Datum?>? tournaments = List.empty(growable: true);
   String? tName = "", tDescription = "", tAdd = "", tAvail = "";
@@ -77,8 +75,6 @@ class TournamentDetailsController extends GetxController
     });
   }
 
- 
-
   Future<void> init() async {
     userId = MySharedPref.getid();
     userName = MySharedPref.getName();
@@ -118,17 +114,20 @@ class TournamentDetailsController extends GetxController
           try {
             url = tournaments![0]!.url;
             if (url != null) {
-               url = tournaments![0]!.url;
-            if (url != null) {
-              videoController = YoutubePlayerController(
-                initialVideoId: YoutubePlayer.convertUrlToId(url!)!,
-                flags: const YoutubePlayerFlags(
-                    autoPlay: true,
-                    hideControls: false,
-                    disableDragSeek: true),
-              ).obs;
-              update();
-            }
+              url = tournaments![0]!.url;
+              if (url != null) {
+                videoController = YoutubePlayerController(
+                  initialVideoId: 
+                  YoutubePlayer.convertUrlToId(url!)!,
+                  flags: const YoutubePlayerFlags(
+                      autoPlay: true,
+                      hideControls: false,
+                      // isLive: true,
+                      // showLiveFullscreenButton: true,
+                      disableDragSeek: true),
+                ).obs;
+                update();
+              }
             }
           } catch (e) {
             debugPrint(e.toString());

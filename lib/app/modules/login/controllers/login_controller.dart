@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -109,6 +110,65 @@ class LoginController extends GetxController {
     });
   }
 
+  Future<void> guestlogin() async {
+    var data = {
+      "email": "guest@email.com",
+      "password": "Password@1234",
+      "device_type": Platform.isAndroid ? "android" : "ios",
+      "device_token": "12345"
+    };
+    isLoading(true);
+    update();
+    ApiService.login(data).then((res) async {
+      LoginResponseModel? resp = loginResponseModelFromJson(res);
+      if (resp!.status == true) {
+        if (resp.data?.status.toString() == "2" ||
+            resp.data?.status.toString() == "2") {
+          Get.snackbar("Account Deletion",
+              "Your account is set for deletion, Please contact support for further communication.",
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM);
+          return;
+        }
+        if (resp.data?.type.toString() == "2") {
+          Get.snackbar("Account",
+              "Your account is associated with Tida Sports as a partner, Please use different login details to login as a customer.",
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM);
+          return;
+        }
+        print(resp.data!.id);
+        MySharedPref.setid(resp.data!.id.toString());
+        print(MySharedPref.getid());
+        MySharedPref.setName(resp.data!.name.toString());
+        print(MySharedPref.getid());
+        MySharedPref.setauthtoken(resp.data!.token.toString());
+        MySharedPref.setemail(resp.data!.email.toString());
+        MySharedPref.setphone(resp.data!.phone.toString());
+        MySharedPref.setavatar(resp.data!.image.toString());
+        // Get.snackbar("Server Response", "${resp.message}",
+        //     backgroundColor: Colors.red,
+        //     colorText: Colors.white,
+        //     snackPosition: SnackPosition.BOTTOM);
+        isLoading(false);
+        update();
+        // getCMSData();
+        await getSportsData();
+        Get.offAllNamed(AppPages.HOME);
+      } else {
+        isLoading(false);
+        update();
+        // Get.snackbar("Invalid Crediantials", resp.message.toString(),
+        //     backgroundColor: Colors.red,
+        //     colorText: Colors.white,
+        //     snackPosition: SnackPosition.BOTTOM);
+        return;
+      }
+    });
+  }
+
   Future<void> login() async {
     if (emailcontroller.text.trim().isEmpty) {
       showSnackbar("email");
@@ -128,6 +188,7 @@ class LoginController extends GetxController {
       ApiService.login(data).then((res) async {
         LoginResponseModel? resp = loginResponseModelFromJson(res);
         if (resp!.status == true) {
+          MySharedPref.clearSession();
           if (resp.data?.status.toString() == "2" ||
               resp.data?.status.toString() == "2") {
             Get.snackbar("Account Deletion",

@@ -4,6 +4,7 @@ import 'package:tida_customer/app/modules/settings/controllers/settings_controll
 import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsView extends StatelessWidget {
   const SettingsView({Key? key}) : super(key: key);
@@ -85,8 +86,8 @@ class SettingsView extends StatelessWidget {
                     children: [
                       GestureDetector(
                           onTap: () {
-                            c.launchurl(Uri.parse(
-                                'https://www.facebook.com/tidasports/'));
+                            launch(
+                                'https://www.facebook.com/tidasports/');
                           },
                           child: Image.asset(
                             "assets/icons/facebook.png",

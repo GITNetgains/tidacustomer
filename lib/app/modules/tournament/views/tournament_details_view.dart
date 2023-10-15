@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tida_customer/app/components/no_data.dart';
 import 'package:tida_customer/app/modules/tournament/controllers/tournament_details_controller.dart';
+import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
 import 'package:tida_customer/utils/common_utils.dart';
@@ -17,37 +18,37 @@ class TournamentDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<TournamentDetailsController>(builder: (c) {
       return WillPopScope(
-        onWillPop: () async {
-          c.isVideoPlaying(false);
-          Get.back();
-          return false;
-        },
-        child: Scaffold(
-          bottomNavigationBar:
-              c.isFullScreen.value ? null : Image.asset("assets/footer.png"),
-          appBar: c.isFullScreen.value
-              ? null
-              : AppBar(
-                  backgroundColor: PRIMARY_COLOR,
-                  title: setHeadlineMedium("Details", color: Colors.white),
-                  actions: [
-                    Obx(() => InkWell(
-                          borderRadius: BorderRadius.all(Radius.circular(30)),
-                          onTap: () {
-                            c.isPinned(!c.isPinned.value);
-                            c.markUnmarkTournament();
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Icon(c.isPinned.value
-                                ? Icons.bookmarks
-                                : Icons.bookmarks_outlined),
-                          ),
-                        ))
-                  ],
-                ),
-          body: basebody(c.isLoading!,
-              
+          onWillPop: () async {
+            c.isVideoPlaying(false);
+            Get.back();
+            return false;
+          },
+          child: Scaffold(
+            bottomNavigationBar:
+                c.isFullScreen.value ? null : Image.asset("assets/footer.png"),
+            appBar: c.isFullScreen.value
+                ? null
+                : AppBar(
+                    backgroundColor: PRIMARY_COLOR,
+                    title: setHeadlineMedium("Details", color: Colors.white),
+                    actions: [
+                      Obx(() => InkWell(
+                            borderRadius: BorderRadius.all(Radius.circular(30)),
+                            onTap: () {
+                              c.isPinned(!c.isPinned.value);
+                              c.markUnmarkTournament();
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Icon(c.isPinned.value
+                                  ? Icons.bookmarks
+                                  : Icons.bookmarks_outlined),
+                            ),
+                          ))
+                    ],
+                  ),
+            body: basebody(
+              c.isLoading!,
               c.tournaments!.isEmpty
                   ? NoData()
                   : ListView(
@@ -65,7 +66,21 @@ class TournamentDetailsView extends StatelessWidget {
                                                   c.videoController!.value,
                                             ),
                                             builder: (context, player) {
-                                              return player;
+                                              return c.isFullScreen.value ==
+                                                      true
+                                                  ? Container(
+                                                      padding:
+                                                          EdgeInsets.all(10.h),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .height,
+                                                      child: player)
+                                                  : player;
                                             },
                                             onEnterFullScreen: () {
                                               c.isFullScreen(true);
@@ -78,7 +93,7 @@ class TournamentDetailsView extends StatelessWidget {
                                         : Stack(
                                             alignment: Alignment.center,
                                             children: [
-                                             getImagewidget(
+                                              getdisplaywidget(
                                                   YoutubePlayer.getThumbnail(
                                                       videoId: YoutubePlayer
                                                           .convertUrlToId(
@@ -109,8 +124,7 @@ class TournamentDetailsView extends StatelessWidget {
                                 : SizedBox(
                                     height: 180.w,
                                     width: double.infinity,
-                                    child: getImagewidget(
-                                        c.image.toString())),
+                                    child: getdisplaywidget(c.image.toString())),
                             Visibility(
                                 visible: !c.isFullScreen.value,
                                 child: Padding(
@@ -206,6 +220,7 @@ class TournamentDetailsView extends StatelessWidget {
                                           child: InkWell(
                                               onTap: () {
                                                 // Get.toNamed(AppRoutes.tnc);
+                                                Get.toNamed(AppPages.TNC);
                                               },
                                               child: setXSmallLabel(
                                                 "Terms & Conditions apply",
@@ -217,9 +232,8 @@ class TournamentDetailsView extends StatelessWidget {
                         )
                       ],
                     ),
-        ),
-      )
-      );
+            ),
+          ));
     });
   }
 

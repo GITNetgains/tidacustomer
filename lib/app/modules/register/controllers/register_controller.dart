@@ -50,7 +50,8 @@ class RegisterController extends GetxController {
     } else if (emailcontroller.text.trim().isEmpty) {
       showSnackbar("email");
       return;
-    } else if (phonecontroller.text.trim().isEmpty) {
+    } 
+    else if (phonecontroller.text.trim().isEmpty) {
       showSnackbar("phone number");
       return;
     } 
@@ -72,7 +73,10 @@ class RegisterController extends GetxController {
     } 
     else if( isPasswordCompliant( passwordcontroller.text.trim().toString()) == false)
     {
-      showSnackbar("valid password");
+      Get.snackbar("Please provide valid Password", "Password should have minimum of 1 special Character, 1 Uppercase letter, 1 lowercase letter, 1 digit and minimum length of 8 characters.",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM);
       return;
     }
     else {
@@ -89,6 +93,7 @@ class RegisterController extends GetxController {
       ApiService.register(data).then((res) async{
         LoginResponseModel? resp = loginResponseModelFromJson(res);
         if (resp!.status!) {
+          MySharedPref.clearSession();
           MySharedPref.setid(resp.data!.id.toString());
           MySharedPref.setName(resp.data!.name.toString());
           MySharedPref.setemail(resp.data!.email.toString());

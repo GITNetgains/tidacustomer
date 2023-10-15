@@ -49,6 +49,34 @@ class SportsView extends StatelessWidget {
                                           .toString(),
                                       c.academies![index]!.id.toString());
                                 })),
+                                // c.venues!.length == 0 ?
+                                // Column(
+                                // crossAxisAlignment: CrossAxisAlignment.center,
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                // mainAxisSize: MainAxisSize.min,
+                                // children:
+                                //     List.generate(c.venues!.length, (index) {
+                                //   return venuecard(
+                                //       c.venues![index]!.image.toString(),
+                                //       c.venues![index]!.title.toString(),
+                                //       c.venues![index]!.address
+                                //           .toString(),
+                                //       c.venues![index]!.id.toString());
+                                // })) : Container(),
+                                // c.experiences!.length == 0 ?
+                                // Column(
+                                // crossAxisAlignment: CrossAxisAlignment.center,
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                // mainAxisSize: MainAxisSize.min,
+                                // children:
+                                //     List.generate(c.experiences!.length, (index) {
+                                //   return experincecard(
+                                //       c.experiences![index]!.image.toString(),
+                                //       c.experiences![index]!.title.toString(),
+                                //       c.experiences![index]!.description
+                                //           .toString(),
+                                //       c.experiences![index]!.id.toString());
+                                // })) : Container(),
                             getVerticalSpace(),
                             getVerticalSpace()
                           ],

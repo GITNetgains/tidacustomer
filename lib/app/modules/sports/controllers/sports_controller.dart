@@ -5,8 +5,10 @@ import 'package:tida_customer/app/data/remote/api_service.dart';
 
 class SportsController extends GetxController {
   List<Academy?>? academies = List.empty(growable: true);
-  RxString userid = "".obs;
-  RxString authtoken = "".obs;
+  List<Venue?>? venues = List.empty(growable: true);
+  List<Experience?>? experiences = List.empty(growable: true);
+  RxString userid = MySharedPref.getid().toString().obs;
+  RxString authtoken = MySharedPref.getauthtoken().toString().obs;
   RxString radius = "100".obs;
   RxString sport = "".obs;
   RxString sportname = "".obs;
@@ -54,13 +56,18 @@ class SportsController extends GetxController {
       "distance_km": radius.value!.trim().isNotEmpty ? radius.value! : "100",
       "sport": sport.value.toString()
     };
+    print(data);
     ApiService.getSearchBySport(data).then((respnse){
       NearbyDataResponse? res = nearbyDataResponseFromJson(respnse);
       if(res!.status!)
       {
          academies!.addAll(res.data!.academy!);
+        //  venues!.addAll(res.data!.venue!);
+        //  experiences!.addAll(res.data!.experience!);
+        //  print(venues);
+         print(experiences);
          update();
-         print(academies);
+        //  print(academies);
       showNoData(false);
       }
       // else {
@@ -78,5 +85,7 @@ class SportsController extends GetxController {
 
   void clearLists() {
     academies!.clear();
+    // venues!.clear();
+    // experiences!.clear();
   }
 }

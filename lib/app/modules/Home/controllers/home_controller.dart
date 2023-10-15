@@ -29,7 +29,7 @@ class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool showData = false.obs;
   TextEditingController fillgoogleplaces = TextEditingController();
-  final GlobalKey<ScaffoldState> key = GlobalKey(); // Create a key
+   final GlobalKey<ScaffoldState> key = GlobalKey(); // Create a key
   List<Datum?>? sportslist = List.empty(growable: true);
   List<Academy?>? academies = List.empty(growable: true);
   List<Tournament?>? tournamentslist = List.empty(growable: true);
@@ -102,6 +102,8 @@ class HomeController extends GetxController {
             longitude: lng,
             latitude: lat,
             timestamp: null,
+            altitudeAccuracy: 0.0,
+            headingAccuracy: 0.0,
             accuracy: 0.0,
             altitude: 0.0,
             heading: 0.0,
@@ -266,11 +268,26 @@ class HomeController extends GetxController {
     await ApiService.getSearchNearByLoc(data).then((response) {
       NearbyDataResponse? res = nearbyDataResponseFromJson(response);
       if (res!.status!) {
-        venueshomelist!.addAll(res.data!.venue!.take(10));
-        academies!.addAll(res.data!.academy!.take(10));
-        tournamentslist!.addAll(res.data!.tournament!.take(10));
+        res.data!.venue!.sort((a, b) {
+          double distanceA = double.tryParse(a!.distance ?? '') ?? 0.0;
+          double distanceB = double.tryParse(b!.distance ?? '') ?? 0.0;
+          return distanceA.compareTo(distanceB);
+        });
+        venueshomelist!.addAll(res.data!.venue!.take(6));
+        res.data!.academy!.sort((a, b) {
+          double distanceA = double.tryParse(a!.distance ?? '') ?? 0.0;
+          double distanceB = double.tryParse(b!.distance ?? '') ?? 0.0;
+          return distanceA.compareTo(distanceB);
+        });
+        academies!.addAll(res.data!.academy!.take(6));
+        tournamentslist!.addAll(res.data!.tournament!.take(6));
         tournamentslist = tournamentslist!.reversed.toList();
-        experienceslist!.addAll(res.data!.experience!.take(10));
+res.data!.experience!.sort((a, b) {
+          double distanceA = double.tryParse(a!.distance ?? '') ?? 0.0;
+          double distanceB = double.tryParse(b!.distance ?? '') ?? 0.0;
+          return distanceA.compareTo(distanceB);
+        });
+        experienceslist!.addAll(res.data!.experience!.take(6));
         update();
       } else {
         debugPrint("IN hEEre3");
@@ -280,6 +297,10 @@ class HomeController extends GetxController {
         }
       }
     }).onError((error, stackTrace) {
+      Get.snackbar(
+        "Internet Connectivity Error",
+        "Please check your internet connection.",
+      );
       debugPrint("IN hEEr4 ${error.toString()}");
     });
   }
@@ -334,4 +355,10 @@ class HomeController extends GetxController {
       debugPrint("error");
     }
   }
+  @override
+  void dispose() {
+    // key.close();
+    super.dispose();
+  }
+  
 }

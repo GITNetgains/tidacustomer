@@ -57,7 +57,7 @@ class FacilitySlotsController extends GetxController
     var id = params["id"];
     facilityId = id.toString();
     facilityname = params["title"];
-    amt = params["amt"].toString();
+    amt = "2";// params["amt"].toString();
     venueid = params["venue_id"].toString();
     debugPrint("params $params, id $id ");
 
@@ -162,6 +162,7 @@ class FacilitySlotsController extends GetxController
           book.slotBookingResponseModelFromJson(response);
       if (res.status!) {
         slotId = res.data!.isNotEmpty ? res.data![0].id.toString() : null;
+         MySharedPref.getemail() == "guest@email.com" ?  customerlogin() :
         paymentFacilitySlot();
         update();
       } else {
@@ -213,6 +214,7 @@ class FacilitySlotsController extends GetxController
               "userid": userId.toString()
             };
             String result = await easbuzzpayment(datinpns["easepayid"]);
+            print(result);
             resonseapi(datinpns, result);
           });
         } catch (e) {
@@ -243,6 +245,7 @@ class FacilitySlotsController extends GetxController
     final Map response =
         await channel.invokeMethod("payWithEasebuzz", parameters);
     String result = response['result'];
+    // print(response);
     return result;
   }
 
@@ -272,4 +275,14 @@ class FacilitySlotsController extends GetxController
           snackPosition: SnackPosition.BOTTOM);
     }
   }
+}
+
+void customerlogin()
+{
+  Get.snackbar("Login/SignUp", "Please Login/Signup an account to make a booking",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM);
+  //  MySharedPref.clearSession();
+  //  Get.offAllNamed(AppPages.INITIAL);
 }

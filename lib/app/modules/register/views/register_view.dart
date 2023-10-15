@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tida_customer/app/components/app_bottom_sheet.dart';
@@ -19,16 +20,16 @@ class RegisterView extends StatelessWidget {
     return GetBuilder<RegisterController>(builder: (c) {
       return Scaffold(
         appBar: AppBar(
-          title: Text("Create a account"),
+          toolbarHeight: 60.h,
+          title: Text("Create a account" , style: TextStyle(fontSize: 20.sp),),
           leading: IconButton(
               onPressed: () {
                 Get.back();
               },
               icon: Icon(Icons.arrow_back_ios_new)),
         ),
-        bottomSheet: AppBottomSheet(),
         body: Padding(
-          padding: const EdgeInsets.all(16.0).h,
+          padding: const EdgeInsets.symmetric(horizontal:16.0).h,
           child: basebody(
             c.isLoading.value,
             ListView(
@@ -38,15 +39,16 @@ class RegisterView extends StatelessWidget {
                 registerfield("Email", AppImages.kuser, "johndoe@hotmail.com",
                     c.emailcontroller),
                 registerfield(
-                    "Phone", AppImages.kuser, "(Optional)", c.phonecontroller),
+                    "Phone", AppImages.kuser, "9000000000", c.phonecontroller,textinputformatters: [
+                      FilteringTextInputFormatter.digitsOnly
+                    ],keyboardType: TextInputType.phone ),
                 registerfield(
-                    "Password(Minimum of 8 characters)",
+                    "Password (Minimum of 8 characters)",
                     AppImages.kpassword,
                     "***********",
-                    c.passwordcontroller,
-                    true),
+                    c.passwordcontroller,obscureText: true),
                 registerfield("Confirm Password", AppImages.kpassword,
-                    "***********", c.confirmpasswordcontroller, true),
+                    "***********", c.confirmpasswordcontroller,obscureText: true),
                 getVerticalSpace(),
                 getVerticalSpace(),
                 CustomButton(
@@ -70,6 +72,9 @@ class RegisterView extends StatelessWidget {
                             decoration: TextDecoration.underline)),
                   ],
                 ),
+                getVerticalSpace(),
+                getVerticalSpace(),
+                AppBottomSheet()
               ],
             ),
           ),
@@ -80,7 +85,7 @@ class RegisterView extends StatelessWidget {
 
   Widget registerfield(String lablefield, String imageasset, String hintfield,
       TextEditingController textEditingController,
-      [bool obscureText = false]) {
+      {bool obscureText = false,List<TextInputFormatter>? textinputformatters , TextInputType? keyboardType}) {
     return Column(
       children: [
         getVerticalSpace(),
@@ -89,6 +94,8 @@ class RegisterView extends StatelessWidget {
           iconData: imageasset,
         ),
         CustomTextFormField(
+          keyboardType: keyboardType,
+          textinputformatters: textinputformatters,
           textEditingController: textEditingController,
           hinttext: hintfield,
           obscureText: obscureText,

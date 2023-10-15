@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tida_customer/app/modules/Booking/controllers/orders_controller.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
 
 import '../../../../utils/constants.dart';
-
 
 class OrderDetails extends StatelessWidget {
   OrderDetails({Key? key}) : super(key: key);
@@ -23,9 +23,7 @@ class OrderDetails extends StatelessWidget {
         body: Obx(
           () => _c.loading.value
               ? showLoader(
-                  hwidth: 80,
-                  hheight: 80,
-                  asset: AppImages.overallloading)
+                  hwidth: 80, hheight: 80, asset: AppImages.overallloading)
               : ListView(
                   children: [
                     Padding(
@@ -48,6 +46,19 @@ class OrderDetails extends StatelessWidget {
                           setHeadlineMedium("Phone", color: Colors.black),
                           setHeadlineMedium(
                               '${_c.getSelectedOrder().user?.phone ?? ""}',
+                              color: PRIMARY_COLOR),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          setHeadlineMedium("Partner ID", color: Colors.black),
+                          setHeadlineMedium(
+                              '${_c.getSelectedOrder().partnerId.toString()}',
                               color: PRIMARY_COLOR),
                         ],
                       ),
@@ -103,7 +114,7 @@ class OrderDetails extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Divider(),
+                    // const Divider(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: _getBookingWidget(),
@@ -233,6 +244,67 @@ class OrderDetails extends StatelessWidget {
                         ? Container(
                             padding: EdgeInsets.all(10),
                             child: getPrimaryButton("Pay Now", () {
+                              _c.getSelectedOrder().type == "Facility Slot"
+                                  ? _c.bookFacilitySlot(
+                                      _c
+                                          .getSelectedOrder()
+                                          .facility
+                                          ?.openingTime
+                                          .toString(),
+                                      _c
+                                          .getSelectedOrder()
+                                          .facility
+                                          ?.closingTime
+                                          .toString(),
+                                      _c
+                                          .getSelectedOrder()
+                                          .facility
+                                          ?.id
+                                          .toString(),
+                                      _c
+                                          .getSelectedOrder()
+                                          .facilityBooking
+                                          ?.date
+                                          .toString(),
+                                      _c
+                                          .getSelectedOrder()
+                                          .partnerId
+                                          .toString(),
+                                      _c.getSelectedOrder().amount.toString(),
+                                    )
+                                  : _c.getSelectedOrder().type ==
+                                          "Academy Session"
+                                      ?
+                                      //  _c.paymentFacilitySlot(_c.getSelectedOrder().partnerId.toString(),_c.getSelectedOrder().amount.toString(),_c.getSelectedOrder().toString());
+                                      _c.academyexppayment(
+                                          _c
+                                              .getSelectedOrder()
+                                              .academy!
+                                              .id
+                                              .toString(),
+                                          _c
+                                              .getSelectedOrder()
+                                              .amount
+                                              .toString(),
+                                          _c
+                                              .getSelectedOrder()
+                                              .packages!
+                                              .id
+                                              .toString())
+                                      : _c.exppaymentSlot(
+                                          _c
+                                              .getSelectedOrder()
+                                              .partnerId!
+                                              .toString(),
+                                          _c
+                                              .getSelectedOrder()
+                                              .amount
+                                              .toString(),
+                                          _c
+                                              .getSelectedOrder()
+                                              .experience!
+                                              .id
+                                              .toString());
                               // initPaymentSheet(
                               //     _c.getSelectedOrder().amount.toString(),
                               //     _c.getSelectedOrder().id.toString());
@@ -300,7 +372,7 @@ class OrderDetails extends StatelessWidget {
                                     getVerticalSpace(),
                                     getVerticalSpace(),
                                     getPrimaryButton("Submit", () {
-                                      // _c.saveRating();
+                                      _c.saveRating();
                                     })
                                   ],
                                 ),
@@ -335,21 +407,53 @@ class OrderDetails extends StatelessWidget {
 
   _getBookingWidget() {
     String displayName = "";
+    String displaytiming = "";
+    String displayaddress = "";
     if (_c.getSelectedOrder().facility != null) {
-      displayName = _c.getSelectedOrder().facility?.title ?? "-";
+      displayName = _c.getSelectedOrder().venuename ?? "-";
+      displaytiming =
+          "${_c.getSelectedOrder().facility!.openingTime ?? ""} - ${_c.getSelectedOrder().facility!.closingTime ?? ""} ";
+          displayaddress = _c.getSelectedOrder().facilityaddress ?? "";
     } else if (_c.getSelectedOrder().tournament != null) {
       displayName = _c.getSelectedOrder().tournament?.title ?? "-";
     } else if (_c.getSelectedOrder().academy != null) {
       displayName = _c.getSelectedOrder().academy?.name ?? "-";
+          displayaddress = _c.getSelectedOrder().academy!.address.toString() ?? "";
     } else if (_c.getSelectedOrder().experience != null) {
       displayName = _c.getSelectedOrder().experience?.title ?? "-";
-    }
+          displayaddress = _c.getSelectedOrder().experience!.address.toString() ?? "";
+    } 
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
-        setHeadlineMedium("Service Name", color: Colors.black),
-        setHeadlineMedium('${(displayName)}', color: PRIMARY_COLOR),
+        Divider(),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical:8.0).h,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              setHeadlineMedium("Service Name", color: Colors.black),
+              Container(
+                  width: 150.w,
+                  child: setHeadlineMedium('${(displayName)}',
+                      color: PRIMARY_COLOR,textAlign: TextAlign.right)),
+            ],
+          ),
+        ),
+        Divider(),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical:8.0).h,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              setHeadlineMedium("Service Address", color: Colors.black),
+              Container(
+                  width: 150.w,
+                  child: setHeadlineMedium('${(displayaddress)}',
+                      color: PRIMARY_COLOR,textAlign: TextAlign.right )),
+            ],
+          ),
+        ),
       ],
     );
   }

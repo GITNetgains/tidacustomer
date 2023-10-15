@@ -26,7 +26,7 @@ ThemeData getAppTheme() {
   return ThemeData(
     scaffoldBackgroundColor: Colors.white,
     appBarTheme: const AppBarTheme(
-      color:Color(0xfff43522),
+      color: Color(0xfff43522),
     ),
     textTheme: GoogleFonts.robotoTextTheme().copyWith(
       headlineLarge: GoogleFonts.mPlusRounded1c(
@@ -38,6 +38,7 @@ ThemeData getAppTheme() {
     ),
   );
 }
+
 Widget setHeadlineLarge(String text,
     {BuildContext? context,
     bool upperCase = false,
@@ -51,7 +52,7 @@ Widget setHeadlineLarge(String text,
           : getTranslated(text, context: context),
       style: getAppFontB(
         textStyle: TextStyle(
-          fontSize: fontsize.sp ,
+          fontSize: fontsize.sp,
           color: color,
           fontWeight: FontWeight.w700,
         ),
@@ -61,13 +62,17 @@ Widget setHeadlineLarge(String text,
 Widget setHeadlineMedium(String text,
     {BuildContext? context,
     bool upperCase = false,
+    bool reduce = false,
     Color color = Colors.black,
-    double fontSize = LARGE_TITLE_FONT}) {
+    double fontSize = LARGE_TITLE_FONT, TextAlign textAlign = TextAlign.left}) {
   return Text(
+    text.length > 27  && reduce == true ?  upperCase
+        ? getTranslated("${text.substring(0,27)}...", context: context).toUpperCase() 
+        : getTranslated("${text.substring(0,27)}...", context: context) :
     upperCase
-        ? getTranslated(text, context: context).toUpperCase()
+        ? getTranslated(text, context: context).toUpperCase() 
         : getTranslated(text, context: context),
-    textAlign: TextAlign.left,
+    textAlign: textAlign ,
     style: getAppFontB(
         textStyle: TextStyle(
             fontSize: fontSize.sp,
@@ -82,7 +87,9 @@ Widget setPrimaryTextLarge(String text,
   return Text(text,
       style: getAppFontA(
           textStyle: TextStyle(
-              fontSize: fontSize.sp, color: color, fontWeight: FontWeight.w400)));
+              fontSize: fontSize.sp,
+              color: color,
+              fontWeight: FontWeight.w400)));
 }
 
 Widget setPrimaryTextMed(String text,
@@ -97,11 +104,12 @@ Widget setPrimaryTextMed(String text,
 }
 
 Widget setCardHeading(String text,
-    {double fontSize = LARGE_TITLE_FONT,
+    {double fontSize = 16,
     int max = 2,
+    bool reduce = false,
     Color color = Colors.black}) {
   return Text(
-    text,
+  text.length > 20  && reduce == true ?  "${text.substring(0,20)}...": text,
     maxLines: max,
     style: getAppFontA(
         textStyle: TextStyle(
@@ -115,10 +123,11 @@ Widget setCardHeading(String text,
 Widget setSmallLabel(String text,
     {Color color = Colors.black,
     bool opacity = false,
+    bool reduce = false,
     TextAlign align = TextAlign.start,
     TextOverflow? textOverflow,
     int max = 2}) {
-  return Text(text,
+  return Text(text.length > 40  && reduce == true ?  "${text.substring(0,40)}...": text,
       textAlign: align,
       overflow: textOverflow,
       maxLines: max,
@@ -133,9 +142,10 @@ Widget setSmallLabel(String text,
 Widget setXSmallLabel(String text,
     {Color color = Colors.black,
     bool opacity = false,
+    bool reduce = false,
     FontWeight fw = FontWeight.w400,
     double fontSize = XSMALL_FONT}) {
-  return Text(text,
+  return Text(text.length > 27  && reduce == true ?  "${text.substring(0,27)}...": text, 
       style: getAppFontA(
           textStyle: TextStyle(
               fontSize: fontSize.sp,
@@ -147,9 +157,10 @@ Widget setMediumLabel(String text,
     {BuildContext? context,
     Color color = Colors.black,
     TextAlign align = TextAlign.start,
+    bool reduce = false,
     double fontSize = MEDIUM_FONT,
     TextDecoration decoration = TextDecoration.none}) {
-  return Text(getTranslated(text, context: context),
+  return Text(text.length > 27  && reduce == true ?  getTranslated("${text.substring(0,27)}...", context: context) : getTranslated(text, context: context),
       textAlign: align,
       style: getAppFontA(
           textStyle: TextStyle(
@@ -160,7 +171,8 @@ Widget setMediumLabel(String text,
       )));
 }
 
-Widget setTextButton(String text, {VoidCallback? callback, IconData? icon, Color? color}) {
+Widget setTextButton(String text,
+    {VoidCallback? callback, IconData? icon, Color? color}) {
   return GestureDetector(
       onTap: callback,
       child: Text.rich(
@@ -168,10 +180,10 @@ Widget setTextButton(String text, {VoidCallback? callback, IconData? icon, Color
             text: text,
             style: getAppFontA(
                 textStyle: TextStyle(
-                    fontSize: 16,
-                    color: color ?? Colors.black,
-                    fontWeight: FontWeight.w400,
-                    )),
+              fontSize: 16.sp,
+              color: color ?? Colors.black,
+              fontWeight: FontWeight.w400,
+            )),
             children: [
               (icon == null)
                   ? const WidgetSpan(
@@ -313,26 +325,31 @@ Widget getSecondaryButton(String text, VoidCallback onClicked) {
 /*Buttons ends*/
 
 Widget getVerticalSpace() {
-  return const SizedBox(
-    height: 10,
+  return  SizedBox(
+    height: 10.h,
   );
 }
 
 Widget getHorizontalSpace() {
-  return const SizedBox(
-    width: 10,
+  return SizedBox(
+    width: 10.w,
   );
 }
 
-Widget showLoader({String? message,double? hwidth, double? hheight, required String asset}) {
+Widget showLoader(
+    {String? message, double? hwidth, double? hheight, required String asset}) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-       Center(
-        child: Image.asset(asset,width: hwidth ?? 80, height: hheight ?? 80,)
-        // CircularProgressIndicator(
-        //     valueColor: AlwaysStoppedAnimation<Color>(Colors.red)),
-      ),
+      Center(
+          child: Image.asset(
+        asset,
+        width: hwidth ?? 80,
+        height: hheight ?? 80,
+      )
+          // CircularProgressIndicator(
+          //     valueColor: AlwaysStoppedAnimation<Color>(Colors.red)),
+          ),
       getVerticalSpace(),
       setSmallLabel(message ?? "loading".translate())
     ],
@@ -466,7 +483,6 @@ String getFormattedDateTime1(String date) {
   return dd;
 }
 
-
 Widget showLoading() {
   Random rnd;
   int min = 0;
@@ -484,14 +500,18 @@ Widget showLoading() {
   return Padding(
     padding: const EdgeInsets.only(bottom: 0.0),
     child: Center(
-      child: Image.asset(AppImages.loading, height: 150, width: 150,)
-      // Lottie.asset(
-      //   'assets/animations/${animation[r]}',
-      //   height: 100,
-      //   repeat: false,
-      //   reverse: false,
-      //   fit: BoxFit.contain,
-      // ),
-    ),
+        child: Image.asset(
+      AppImages.loading,
+      height: 150,
+      width: 150,
+    )
+        // Lottie.asset(
+        //   'assets/animations/${animation[r]}',
+        //   height: 100,
+        //   repeat: false,
+        //   reverse: false,
+        //   fit: BoxFit.contain,
+        // ),
+        ),
   );
 }

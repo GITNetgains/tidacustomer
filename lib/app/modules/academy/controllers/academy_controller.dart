@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tida_customer/app/data/local/my_shared_pref.dart';
 import 'package:tida_customer/app/data/remote/api_service.dart';
@@ -12,9 +13,11 @@ class AcademyController extends GetxController {
 
   @override
   void onInit() {
+    isLoading(true);
     userId(MySharedPref.getid());
     token(MySharedPref.getauthtoken());
     getAcademies();
+    isLoading(false);
     super.onInit();
   }
 
@@ -40,7 +43,11 @@ class AcademyController extends GetxController {
           academyFullDetailResponseFromJson(response);
       if (res!.status!) {
         academies!.addAll(res.data!);
-
+        academies!.sort((a, b) {
+          double distanceA = double.tryParse(a!.distance ?? '') ?? 0.0;
+          double distanceB = double.tryParse(b!.distance ?? '') ?? 0.0;
+          return distanceA.compareTo(distanceB);
+        });
         update();
       } else {
         //Get.snackbar("Error", "${res.message}");
@@ -53,5 +60,4 @@ class AcademyController extends GetxController {
       Get.snackbar("Error", error.toString());
     });
   }
-  
 }

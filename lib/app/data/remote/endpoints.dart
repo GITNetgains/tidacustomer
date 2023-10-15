@@ -30,4 +30,5 @@ class Endpoints {
   static const CHANGE_PASSWORD = "/partner_user/changepassword";
   static const orderApigGtAllData = "/Order_api/getAllData";
   static const cmsApiGetAllData = "/Cms_api/getAllData";
+  static const SAVE_RATING = "/Review_api/insertData";
 }

@@ -52,11 +52,16 @@ class VenueController extends GetxController
     await ApiService.getVenues(data).then((response) {
       VenueDetails? res = venueDetailsFromJson(response);
       debugPrint("IN hEEre1");
+      venues.clear();
       if (res!.status!) {
         debugPrint("IN hEEre");
 
         venues.addAll(res.data!);
-
+        venues!.sort((a, b) {
+          double distanceA = double.tryParse(a!.distance ?? '') ?? 0.0;
+          double distanceB = double.tryParse(b!.distance ?? '') ?? 0.0;
+          return distanceA.compareTo(distanceB);
+        });
         debugPrint(" venues ${venues!.length},  ");
         update();
       } else {

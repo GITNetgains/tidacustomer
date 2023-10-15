@@ -55,6 +55,8 @@ class Data {
   Experience? experience;
   User? user;
   Academy? academy;
+  String? facilityaddress;
+  String? venuename;
   FacilityBooking? facilityBooking;
   Packages? packages;
   Data(
@@ -76,6 +78,8 @@ class Data {
       this.facilityBooking,
       this.tournament,
       this.experience,
+      this.venuename,
+      this.facilityaddress,
       this.user,
       this.packages,
       this.academy});
@@ -97,6 +101,8 @@ class Data {
     updatedAt = json['updated_at'];
     packages = Packages.fromJson(json['packages'] ?? {});
     facilityBooking = FacilityBooking.fromJson(json['facility_booking'] ?? {});
+    facilityaddress = json['facility_address'];
+    venuename = json['venu_name'];
     facility = json['facility'] != null
         ? new Facility.fromJson(json['facility'])
         : null;
@@ -127,9 +133,11 @@ class Data {
     data['status'] = this.status;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['venu_name'] = this.venuename;
     if (this.facility != null) {
       data['facility'] = this.facility!.toJson();
     }
+    data['facility_address'] = this.facilityaddress;
     if (this.tournament != null) {
       data['tournament'] = this.tournament!.toJson();
     }

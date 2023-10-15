@@ -27,12 +27,12 @@ class LoginView extends StatelessWidget {
             ListView(
               children: [
                 SizedBox(
-                  height: 50.h,
+                  height: 20.h,
                 ),
                 Image.asset(
                   AppImages.kappicon,
-                  height: 200,
-                  width: 200,
+                  height: 200.h,
+                  width: 200.w,
                 ),
                 Center(
                     child: setSmallLabel(
@@ -87,6 +87,26 @@ class LoginView extends StatelessWidget {
                             decoration: TextDecoration.underline)),
                   ],
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0).h,
+                  child: Center(
+                    child: InkWell(
+                        onTap: () {
+                          c.guestlogin();
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            setMediumLabel(
+                              "Login as ",
+                            ),
+                            setMediumLabel("Guest user", color: Colors.red),
+                          ],
+                        )),
+                  ),
+                ),
+                getVerticalSpace(),
+                getVerticalSpace(),
               ],
             ),
           ),

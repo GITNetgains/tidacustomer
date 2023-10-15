@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tida_customer/app/components/no_data.dart';
+import 'package:tida_customer/app/data/local/my_shared_pref.dart';
 import 'package:tida_customer/app/modules/experience/controllers/experience_details_controller.dart';
+import 'package:tida_customer/app/modules/facility/controllers/facility_slots_controller.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
 import 'package:tida_customer/utils/common_utils.dart';
@@ -34,7 +36,7 @@ class ExperienceDetailsView extends StatelessWidget {
                         height: 180.w,
                         width: double.infinity,
                         child: ClipRRect(
-                          child: getImagewidget(c.image.toString()),
+                          child: getdisplaywidget(c.image.toString()),
                         ),
                       ),
                       // (c.image != null &&
@@ -137,16 +139,21 @@ class ExperienceDetailsView extends StatelessWidget {
                                 : Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 30),
-                                    child: getSecondaryButton("Book Now", () {
-                                      if (c.tBookingAmt!.isEmpty) {
-                                        Get.snackbar("Can't Book",
-                                            "No price from server");
-                                      } else {
-                                        c.isBooking = true;
-                                        c.update();
-                                        c.paymentFacilitySlot();
-                                      }
-                                    })),
+                                    child: MySharedPref.getemail() ==
+                                            "guest@email.com"
+                                        ? getSecondaryButton('Book Now', () {
+                                            customerlogin();
+                                          })
+                                        : getSecondaryButton("Book Now", () {
+                                            if (c.tBookingAmt!.isEmpty) {
+                                              Get.snackbar("Can't Book",
+                                                  "No price from server");
+                                            } else {
+                                              c.isBooking = true;
+                                              c.update();
+                                              c.paymentFacilitySlot();
+                                            }
+                                          })),
                             getVerticalSpace(),
                             Center(
                                 child: InkWell(

@@ -85,7 +85,7 @@ class VenueFullDetailsView extends StatelessWidget {
                                         : c.images.isNotEmpty
                                             ? List.generate(c.images.length,
                                                 (index) {
-                                                return getImagewidget(
+                                                return getdisplaywidget(
                                                     c.images[index].toString());
                                               })
                                             : [
@@ -206,7 +206,7 @@ class VenueFullDetailsView extends StatelessWidget {
                                           : Stack(
                                               alignment: Alignment.center,
                                               children: [
-                                                getImagewidget(
+                                                getdisplaywidget(
                                                   YoutubePlayer.getThumbnail(
                                                       videoId: YoutubePlayer
                                                           .convertUrlToId(c
@@ -540,7 +540,7 @@ class VenueFullDetailsView extends StatelessWidget {
                                           getVerticalSpace(),
                                           getVerticalSpace(),
                                           getVerticalSpace(),
-                                          getFooter(c.lat, c.lng),
+                                          getFooter(c.lat, c.lng, c.venueName.toString()),
                                           getVerticalSpace(),
                                           getVerticalSpace(),
                                           Center(

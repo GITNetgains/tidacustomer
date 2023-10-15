@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:tida_customer/app/data/local/my_shared_pref.dart';
@@ -9,6 +10,7 @@ class ExperienceListController extends GetxController {
   String? userId, userName, token;
   List<Datum?>? experiences = List.empty(growable: true);
   bool? isLoading = true;
+  CachedNetworkImage? cachedNetworkImage;
 
   @override
   void onInit() {

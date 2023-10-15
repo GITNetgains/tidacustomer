@@ -22,7 +22,7 @@ class AcademyListView extends StatelessWidget {
           onRefresh: c.getAcademies,
           child: basebody(
             c.isLoading!.value,
-            c.academies!.isEmpty
+          c.isLoading!.value == false & c.academies!.isEmpty
                 ? NoData()
                 : ListView.builder(
                     scrollDirection: Axis.vertical,

@@ -100,8 +100,8 @@ class HomeView extends StatelessWidget {
               c.isLoading == true
                   ? showLoader(
                       hwidth: 80, hheight: 80, asset: AppImages.overallloading)
-                  : Row(
-                      children: const [
+                  : const Row(
+                      children: [
                         Icon(
                           Icons.location_on,
                           color: Colors.red,
@@ -210,47 +210,46 @@ class HomeView extends StatelessWidget {
 
   Widget academieshomelist() {
     return GetBuilder<HomeController>(builder: (c) {
-      return Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 8.0.h, left: 8.0.w, right: 8.0.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                setHeadlineMedium("Nearby Academies"),
-                c.academies!.isEmpty
-                    ? Container()
-                    : InkWell(
-                        onTap: () {
-                          Get.toNamed(AppPages.ACADEMY_LIST);
-                        },
-                        child: setHeadlineMedium("See All",
-                            color: PRIMARY_COLOR, fontSize: SMALL_FONT))
-              ],
-            ),
+      return Column(children: [
+        Padding(
+          padding: EdgeInsets.only(top: 8.0.h, left: 8.0.w, right: 8.0.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              setHeadlineMedium("Nearby Academies"),
+              c.academies!.isEmpty
+                  ? Container()
+                  : InkWell(
+                      onTap: () {
+                        Get.toNamed(AppPages.ACADEMY_LIST);
+                      },
+                      child: setHeadlineMedium("See All",
+                          color: PRIMARY_COLOR, fontSize: SMALL_FONT))
+            ],
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.zero,
-            child: c.academies!.isEmpty
-                ? SizedBox(
-                    height: 50.h,
-                    child: Center(
-                        child:
-                            setXSmallLabel("There are no academies nearby.")),
-                  )
-                : Row(
-                    children: List.generate(c.academies!.length, (index) {
-                    return academyCard(
-                        c.academies![index]!.logo.toString(),
-                        c.academies![index]!.name.toString(),
-                        c.academies![index]!.address.toString(),
-                        c.academies![index]!.id.toString());
-                  })),
-          ),
-        ],
-      );
+        ),
+        c.academies!.isEmpty
+            ? SizedBox(
+                height: 50.h,
+                child: Center(
+                    child: setXSmallLabel("There are no academies nearby.")),
+              )
+            : Container(
+                height: 257.h,
+                child: ListView.builder(
+                    // shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: c.academies!.length,
+                    itemBuilder: (context, index) {
+                      return academyCard(
+                          c.academies![index]!.logo.toString(),
+                          c.academies![index]!.name.toString(),
+                          c.academies![index]!.address.toString(),
+                          c.academies![index]!.id.toString());
+                    }),
+              )
+      ]);
     });
   }
 
@@ -264,7 +263,7 @@ class HomeView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                setHeadlineMedium("Popular Tournaments"),
+                setHeadlineMedium("School Showcase"),
                 c.tournamentslist!.isEmpty
                     ? Container()
                     : InkWell(
@@ -276,25 +275,26 @@ class HomeView extends StatelessWidget {
               ],
             ),
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.zero,
-            child: c.tournamentslist!.isEmpty
-                ? SizedBox(
-                    height: 50.h,
-                    child: Center(
-                        child: setXSmallLabel(
-                            "There are no popular tournaments now.")),
-                  )
-                : Row(
-                    children: List.generate(c.tournamentslist!.length, (index) {
-                    return tournamentcard(
-                        c.tournamentslist![index]!.image.toString(),
-                        c.tournamentslist![index]!.title.toString(),
-                        c.tournamentslist![index]!.description.toString(),
-                        c.tournamentslist![index]!.id.toString());
-                  })),
-          ),
+          c.tournamentslist!.isEmpty
+              ? SizedBox(
+                  height: 50.h,
+                  child: Center(
+                      child: setXSmallLabel(
+                          "There are no popular tournaments now.")),
+                )
+              : Container(
+                  height: 257.h,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: c.tournamentslist!.length,
+                      itemBuilder: (context, index) {
+                        return tournamentcard(
+                            c.tournamentslist![index]!.image.toString(),
+                            c.tournamentslist![index]!.title.toString(),
+                            c.tournamentslist![index]!.description.toString(),
+                            c.tournamentslist![index]!.id.toString());
+                      }),
+                ),
         ],
       );
     });
@@ -358,24 +358,29 @@ class HomeView extends StatelessWidget {
               ],
             ),
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(vertical: 10.h),
-            child: c.venueshomelist!.isEmpty
-                ? SizedBox(
-                    height: 50.h,
-                    child: Center(
-                        child: setXSmallLabel("There are no venues nearby.")),
-                  )
-                : Row(
-                    children: List.generate(c.venueshomelist!.length, (index) {
-                    return venuecard(
-                        c.venueshomelist![index]!.image.toString(),
-                        c.venueshomelist![index]!.title.toString(),
-                        c.venueshomelist![index]!.address.toString(),
-                        c.venueshomelist![index]!.id.toString());
-                  })),
-          ),
+          c.venueshomelist!.isEmpty
+              ? SizedBox(
+                  height: 50.h,
+                  child: Center(
+                      child: setXSmallLabel("There are no venues nearby.")),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(8.0).r,
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: MediaQuery.of(Get.context!).size.width / 2.5,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: c.venueshomelist!.length,
+                        itemBuilder: (context, index) {
+                          return venuecard(
+                              c.venueshomelist![index]!.image.toString(),
+                              c.venueshomelist![index]!.title.toString(),
+                              c.venueshomelist![index]!.address.toString(),
+                              c.venueshomelist![index]!.id.toString());
+                        }),
+                  ),
+                ),
         ],
       );
     });
@@ -403,25 +408,26 @@ class HomeView extends StatelessWidget {
               ],
             ),
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(vertical: 10.h),
-            child: c.experienceslist!.isEmpty
-                ? SizedBox(
-                    height: 50.h,
-                    child: Center(
-                        child:
-                            setXSmallLabel("There are no experiences nearby.")),
-                  )
-                : Row(
-                    children: List.generate(c.experienceslist!.length, (index) {
-                    return experincecard(
-                        c.experienceslist![index]!.image.toString(),
-                        c.experienceslist![index]!.title.toString(),
-                        c.experienceslist![index]!.description.toString(),
-                        c.experienceslist![index]!.id.toString());
-                  })),
-          ),
+          c.experienceslist!.isEmpty
+              ? SizedBox(
+                  height: 50.h,
+                  child: Center(
+                      child:
+                          setXSmallLabel("There are no experiences nearby.")),
+                )
+              : SizedBox(
+                height: 257.h,
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: c.experienceslist!.length,
+                    itemBuilder: (context, index) {
+                      return experincecard(
+                          c.experienceslist![index]!.image.toString(),
+                          c.experienceslist![index]!.title.toString(),
+                          c.experienceslist![index]!.description.toString(),
+                          c.experienceslist![index]!.id.toString());
+                    }),
+              ),
         ],
       );
     });

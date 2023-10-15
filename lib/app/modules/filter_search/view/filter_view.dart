@@ -209,6 +209,8 @@ class FilterSearchView extends StatelessWidget {
             latitude: lat,
             timestamp: null,
             accuracy: 0.0,
+            altitudeAccuracy: 0.0,
+            headingAccuracy: 0.0,
             altitude: 0.0,
             heading: 0.0,
             speed: 0.0,

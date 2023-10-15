@@ -161,6 +161,7 @@ class Academy {
     this.feedbacks,
     this.amenitiesId,
     this.status,
+    this.distance,
     this.createdAt,
     this.updatedAt,
     this.rating,
@@ -186,6 +187,7 @@ class Academy {
   String? capacity;
   String? remarksCurrentCapacity;
   String? sessionPlan;
+  String? distance;
   String? remarksSessionPlan;
   String? ageGroupOfStudents;
   String? remarksStudents;
@@ -233,6 +235,7 @@ class Academy {
         floodLights: json["flood_lights"],
         groundSize: json["ground_size"],
         person: json["person"],
+        distance: json["distance"],
         coachExperience: json["coach_experience"],
         noOfAssistentCoach: json["no_of_assistent_coach"],
         assistentCoachName: json["assistent_coach_name"],
@@ -264,6 +267,7 @@ class Academy {
         "session_timings": sessionTimings,
         "week_days": weekDays,
         "price": price,
+        "distance": distance,
         "remarks_price": remarksPrice,
         "skill_level": skillLevel,
         "academy_jersey": academyJersey,
@@ -298,6 +302,7 @@ class Experience {
     this.venueId,
     this.image,
     this.status,
+    this.distance,
     this.createdAt,
     this.updatedAt,
     this.rating,
@@ -310,6 +315,7 @@ class Experience {
   String? venueId;
   String? image;
   String? status;
+  String? distance;
   String? createdAt;
   String? updatedAt;
   List<RatingElement>? rating;
@@ -322,9 +328,15 @@ class Experience {
         venueId: json["venue_id"],
         image: json["image"],
         status: json["status"],
+        distance: json["distance"],
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
-        rating: json["rating"] == null ? [] : json["rating"] is List ? List<RatingElement>.from(json["rating"]!.map((x) => RatingElement.fromJson(x))):[],
+        rating: json["rating"] == null
+            ? []
+            : json["rating"] is List
+                ? List<RatingElement>.from(
+                    json["rating"]!.map((x) => RatingElement.fromJson(x)))
+                : [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -335,6 +347,7 @@ class Experience {
         "venue_id": venueId,
         "image": image,
         "status": status,
+        "distance": distance,
         "created_at": createdAt,
         "updated_at": updatedAt,
       };

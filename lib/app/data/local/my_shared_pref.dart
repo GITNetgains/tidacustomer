@@ -16,10 +16,17 @@ class MySharedPref {
   static const String _radius = "100";
   static const String _filtervenue = "venue";
   static const String _filterraduius = "100";
+  static const String _fcmTokenKey = "fcm";
 
   static Future<void> init() async {
     _sharedPreferences = await SharedPreferences.getInstance();
   }
+
+    static void setFcmToken(String token) =>
+      _sharedPreferences.setString(_fcmTokenKey, token);
+
+  /// get generated fcm token
+  static String? getFcmToken() => _sharedPreferences.getString(_fcmTokenKey);
 
   static void setName(String name) => _sharedPreferences.setString(_name, name);
 

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,10 @@ class ExperienceListView extends StatelessWidget {
     return GetBuilder<ExperienceListController>(builder: (c) {
       return Scaffold(
           appBar: AppBar(
+            leading: IconButton(onPressed: (){
+              c.cachedNetworkImage?.cacheManager?.dispose();
+              Get.back();
+            }, icon: Icon(Icons.arrow_back_ios)),
             backgroundColor: PRIMARY_COLOR,
             title: setHeadlineMedium("Experiences", color: Colors.white),
           ),

@@ -7,7 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tida_customer/app/components/app_bottom_sheet.dart';
 import 'package:tida_customer/app/components/no_data.dart';
+import 'package:tida_customer/app/data/local/my_shared_pref.dart';
 import 'package:tida_customer/app/modules/academy/controllers/academy_full_details_controller.dart';
+import 'package:tida_customer/app/modules/facility/controllers/facility_slots_controller.dart';
 import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
@@ -71,7 +73,7 @@ class AcademyFullDetailsView extends StatelessWidget {
                                 ? [const Center(child: Text("Images Loading"))]
                                 : c.images.isNotEmpty
                                     ? List.generate(c.images.length, (index) {
-                                        return getImagewidget(
+                                        return getdisplaywidget(
                                             c.images[index].toString());
                                       })
                                     : [
@@ -483,29 +485,26 @@ class AcademyFullDetailsView extends StatelessWidget {
                                                               ),
                                                               Row(
                                                                 children: [
-                                                                  getSecondaryButton(
-                                                                    'Book Now',
-                                                                    () {
-                                                                      if (c
-                                                                          .packages![
-                                                                              index]!
-                                                                          .price!
-                                                                          .isNotEmpty) {
-                                                                        c.bookingAmt = c
-                                                                            .packages![index]!
-                                                                            .price
-                                                                            .toString();
-                                                                        c.packageId.value = c
-                                                                            .packages![index]!
-                                                                            .id
-                                                                            .toString();
-                                                                        c.isBooking.value =
-                                                                            true;
-                                                                        c.update();
-                                                                        c.paymentFacilitySlot();
-                                                                      }
-                                                                    },
-                                                                  ),
+                                                                  MySharedPref.getemail() ==
+                                                                          "guest@email.com"
+                                                                      ? getSecondaryButton(
+                                                                          'Book Now',
+                                                                          () {
+                                                                          customerlogin();
+                                                                        })
+                                                                      : getSecondaryButton(
+                                                                          'Book Now',
+                                                                          () {
+                                                                            if (c.packages![index]!.price!.isNotEmpty) {
+                                                                              c.bookingAmt = c.packages![index]!.price.toString();
+                                                                              c.packageId.value = c.packages![index]!.id.toString();
+                                                                              c.isBooking.value = true;
+                                                                              c.update();
+
+                                                                              c.paymentFacilitySlot();
+                                                                            }
+                                                                          },
+                                                                        ),
                                                                 ],
                                                               )
                                                             ],
@@ -522,7 +521,7 @@ class AcademyFullDetailsView extends StatelessWidget {
                                         ),
                               getVerticalSpace(),
                               getVerticalSpace(),
-                              getFooter(c.lat, c.lng),
+                              getFooter(c.lat, c.lng,c.acName.toString()),
                               getVerticalSpace(),
                               Center(
                                   child: InkWell(

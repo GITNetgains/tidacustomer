@@ -50,8 +50,8 @@ Widget academyCard(String url, String name, String description, String id,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    setHeadlineMedium(name),
-                    setSmallLabel(description),
+                    setHeadlineMedium(name, reduce: true),
+                    setSmallLabel(description, reduce: true),
                   ],
                 ),
               ),
@@ -61,18 +61,18 @@ Widget academyCard(String url, String name, String description, String id,
   );
 }
 
-Widget tournamentcard(String url, String name, String description,String id,
+Widget tournamentcard(String url, String name, String description, String id,
     {double verticalmargin = 5}) {
   return InkWell(
-    onTap: (){
-      Get.toNamed(AppPages.TOURNAMENT_DETAILS, parameters: {"id":id});
+    onTap: () {
+      Get.toNamed(AppPages.TOURNAMENT_DETAILS, parameters: {"id": id});
     },
     child: Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal:8.0).w,
       child: Container(
           margin: EdgeInsets.symmetric(vertical: verticalmargin),
           width: MediaQuery.of(Get.context!).size.width * 0.9,
-          // height:  MediaQuery.of(Get.context!).size.width/2,
+          height:  MediaQuery.of(Get.context!).size.width/2,
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(color: Colors.black12, width: 0.5),
@@ -114,16 +114,17 @@ Widget tournamentcard(String url, String name, String description,String id,
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        setCardHeading(name.toString().capitalize!, max: 3),
-                        setSmallLabel(description.toString().toUpperCase(),
-                            textOverflow: TextOverflow.ellipsis, max: 2),
+                        setCardHeading(name.toString(), max: 1, reduce: true),
+                        setSmallLabel(description.toString().capitalize!,
+                            textOverflow: TextOverflow.ellipsis,
+                            max: 2,
+                            reduce: true),
                       ],
                     )),
                     getHorizontalSpace(),
                     getSecondaryButton("Watch Now", () {
-                      Get.toNamed(AppPages.TOURNAMENT_DETAILS, parameters: {
-                        "id": id
-                      });
+                      Get.toNamed(AppPages.TOURNAMENT_DETAILS,
+                          parameters: {"id": id});
                     })
                   ],
                 ),
@@ -141,7 +142,7 @@ Widget experincecard(String url, String name, String description, String id,
       Get.toNamed(AppPages.EXPERIENCE_DETAILS, parameters: {"id": id});
     },
     child: Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal:8.0).w,
       child: Container(
           margin: EdgeInsets.symmetric(vertical: verticalmargin),
           width: MediaQuery.of(Get.context!).size.width * 0.9,
@@ -187,9 +188,12 @@ Widget experincecard(String url, String name, String description, String id,
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        setCardHeading(name.toString().capitalize!, max: 3),
-                        setSmallLabel(description.toString().toUpperCase(),
-                            textOverflow: TextOverflow.ellipsis, max: 2),
+                        setCardHeading(name.toString().capitalize!,
+                            max: 3, reduce: true),
+                        setSmallLabel(description.toString(),
+                            textOverflow: TextOverflow.ellipsis,
+                            max: 1,
+                            reduce: true),
                       ],
                     )),
                     getHorizontalSpace(),
@@ -209,14 +213,15 @@ Widget experincecard(String url, String name, String description, String id,
   );
 }
 
-Widget sportsimagewidget([String url = "https://tidasports.com/secure/uploads/tbl_venue/20230824211450-2023-08-24tbl_venue211448.jpg"])
-{
+Widget sportsimagewidget(
+    [String url =
+        "https://tidasports.com/secure/uploads/tbl_venue/20230824211450-2023-08-24tbl_venue211448.jpg"]) {
   return Container(
     color: Colors.white,
     child: SizedBox(
       //  height:  MediaQuery.of(Get.context!).size.width/2,
       child: CachedNetworkImage(
-       imageUrl: url,
+        imageUrl: url,
         fit: BoxFit.cover,
         memCacheHeight: 180,
         memCacheWidth: 180,
@@ -224,15 +229,15 @@ Widget sportsimagewidget([String url = "https://tidasports.com/secure/uploads/tb
         width: 180.w,
         fadeInDuration: const Duration(seconds: 1),
         errorWidget: (context, exception, stacktrace) {
-          return Text(stacktrace.toString());
+          return Icon(Icons.error);
         },
-        progressIndicatorBuilder: (context,url, progress) {
+        progressIndicatorBuilder: (context, url, progress) {
           return Image.asset(
             AppImages.loading,
             height: 180.h,
             width: 180.w,
           );
-        }, 
+        },
       ),
     ),
   );
@@ -246,7 +251,39 @@ Widget getImagewidget(
     child: SizedBox(
       //  height:  MediaQuery.of(Get.context!).size.width/2,
       child: CachedNetworkImage(
-       imageUrl: url, //"https://res.cloudinary.com/dnp3cguhl/image/upload/v1692563958/download_d2e6e1ef03.jpg",
+        imageUrl:
+            url, //"https://res.cloudinary.com/dnp3cguhl/image/upload/v1692563958/download_d2e6e1ef03.jpg",
+        fit: BoxFit.cover,
+        memCacheHeight: 500,
+        memCacheWidth: 1000,
+        height: 180.h,
+        width: 500.w,
+        fadeInDuration: const Duration(seconds: 1),
+        errorWidget: (context, exception, stacktrace) {
+          return Icon(Icons.error);
+        },
+        progressIndicatorBuilder: (context, url, progress) {
+          return Image.asset(
+            AppImages.loading,
+            height: 180.h,
+            width: 500.w,
+          );
+        },
+      ),
+    ),
+  );
+}
+
+Widget getdisplaywidget(
+    [String url =
+        "https://tidasports.com/secure/uploads/tbl_venue/20230824211450-2023-08-24tbl_venue211448.jpg"]) {
+  return Container(
+    color: Colors.white,
+    child: SizedBox(
+      //  height:  MediaQuery.of(Get.context!).size.width/2,
+      child: CachedNetworkImage(
+        imageUrl:
+            url, //"https://res.cloudinary.com/dnp3cguhl/image/upload/v1692563958/download_d2e6e1ef03.jpg",
         fit: BoxFit.cover,
         memCacheHeight: 400,
         memCacheWidth: 800,
@@ -254,15 +291,15 @@ Widget getImagewidget(
         width: 500.w,
         fadeInDuration: const Duration(seconds: 1),
         errorWidget: (context, exception, stacktrace) {
-          return Text(stacktrace.toString());
+          return Icon(Icons.error);
         },
-        progressIndicatorBuilder: (context,url, progress) {
+        progressIndicatorBuilder: (context, url, progress) {
           return Image.asset(
             AppImages.loading,
             height: 180.h,
             width: 500.w,
           );
-        }, 
+        },
       ),
     ),
   );
@@ -364,7 +401,7 @@ Widget getvenueimagewidget(
     child: SizedBox(
       //  height:  MediaQuery.of(Get.context!).size.width/2,
       child: CachedNetworkImage(
-       imageUrl: url,
+        imageUrl: url,
         fit: BoxFit.cover,
         memCacheHeight: 500,
         memCacheWidth: 1000,
@@ -374,28 +411,25 @@ Widget getvenueimagewidget(
         errorWidget: (context, exception, stacktrace) {
           return Text(stacktrace.toString());
         },
-        progressIndicatorBuilder: (context,url, progress) {
+        progressIndicatorBuilder: (context, url, progress) {
           return Image.asset(
             AppImages.loading,
             // height: 180.h,
             // width: 500.w,
           );
-        }, 
+        },
       ),
     ),
   );
 }
 
-Widget sportsCard(id,name,image) {
+Widget sportsCard(id, name, image) {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 08),
     child: InkWell(
         onTap: () {
           debugPrint("ON SP TAPPED");
-          Get.toNamed(AppPages.SPORTS, parameters: {
-            "id": id,
-            "name": name
-          });
+          Get.toNamed(AppPages.SPORTS, parameters: {"id": id, "name": name});
         },
         child: Container(
           height: 100.0.h,
@@ -411,7 +445,7 @@ Widget sportsCard(id,name,image) {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                image == null 
+                image == null
                     ? const Icon(
                         Icons.sports_cricket,
                         color: PRIMARY_COLOR,
@@ -419,9 +453,7 @@ Widget sportsCard(id,name,image) {
                     : Container(
                         width: 50.h,
                         height: 50.h,
-                        child: ClipRRect(
-                            child: sportsimagewidget(
-                                image))),
+                        child: ClipRRect(child: sportsimagewidget(image))),
                 //SizedBox(height: 12.0,),
                 setSmallLabel(name ?? "Cricket")
               ],
