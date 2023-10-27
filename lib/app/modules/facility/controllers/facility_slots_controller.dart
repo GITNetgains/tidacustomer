@@ -216,6 +216,7 @@ class FacilitySlotsController extends GetxController
             String result = await easbuzzpayment(datinpns["easepayid"]);
             print(result);
             resonseapi(datinpns, result);
+            
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",

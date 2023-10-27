@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tida_customer/app/data/local/my_shared_pref.dart';
@@ -177,10 +178,12 @@ class LoginController extends GetxController {
       showSnackbar("Password");
       return;
     } else {
+      String token = await FirebaseMessaging.instance.getToken() ?? "";
       var data = {
         "email": emailcontroller.text.trim(),
         "password": passwordcontroller.text.trim(),
         "device_type": Platform.isAndroid ? "android" : "ios",
+        "fcm_token": token,
         "device_token": "12345"
       };
       isLoading(true);
