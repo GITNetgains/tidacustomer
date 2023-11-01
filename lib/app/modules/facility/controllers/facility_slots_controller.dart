@@ -9,11 +9,11 @@ import 'package:tida_customer/app/data/models/facility_payment_model.dart';
 import 'package:tida_customer/app/data/remote/api_service.dart';
 import 'package:tida_customer/app/modules/facility/models/fetch_facility_slots_model.dart';
 import 'package:tida_customer/app/routes/app_pages.dart';
-import 'package:tida_customer/app/modules/facility/models/facility_booking_model.dart' as book;
+import 'package:tida_customer/app/modules/facility/models/facility_booking_model.dart'
+    as book;
 import 'package:booking_calendar/booking_calendar.dart';
 
-class FacilitySlotsController extends GetxController
-{
+class FacilitySlotsController extends GetxController {
   static MethodChannel channel = MethodChannel('easebuzz');
   String? userId, userName, token;
   List<Datum?>? slots = List.empty(growable: true);
@@ -57,7 +57,8 @@ class FacilitySlotsController extends GetxController
     var id = params["id"];
     facilityId = id.toString();
     facilityname = params["title"];
-    amt = "2";// params["amt"].toString();
+    // amt = "2"; 
+    amt = params["amt"].toString();
     venueid = params["venue_id"].toString();
     debugPrint("params $params, id $id ");
 
@@ -162,8 +163,9 @@ class FacilitySlotsController extends GetxController
           book.slotBookingResponseModelFromJson(response);
       if (res.status!) {
         slotId = res.data!.isNotEmpty ? res.data![0].id.toString() : null;
-         MySharedPref.getemail() == "guest@email.com" ?  customerlogin() :
-        paymentFacilitySlot();
+        MySharedPref.getemail() == "guest@email.com"
+            ? customerlogin()
+            : paymentFacilitySlot();
         update();
       } else {
         isBooking = false;
@@ -215,8 +217,14 @@ class FacilitySlotsController extends GetxController
             };
             String result = await easbuzzpayment(datinpns["easepayid"]);
             print(result);
-            resonseapi(datinpns, result);
-            
+            resonseapi(datinpns, result).then((value) {
+              try {
+                ApiService.sendBookingNotification(
+                    int.parse(partner_id ?? "0"));
+              } catch (e) {
+                print(e);
+              }
+            });
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",
@@ -260,7 +268,7 @@ class FacilitySlotsController extends GetxController
               colorText: Colors.white,
               snackPosition: SnackPosition.BOTTOM);
           Future.delayed(Duration(milliseconds: 10), () {
-            Get.offNamedUntil( AppPages.HOME,ModalRoute.withName('/home') );
+            Get.offNamedUntil(AppPages.HOME, ModalRoute.withName('/home'));
           });
         });
       } else {
@@ -278,12 +286,12 @@ class FacilitySlotsController extends GetxController
   }
 }
 
-void customerlogin()
-{
-  Get.snackbar("Login/SignUp", "Please Login/Signup an account to make a booking",
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM);
+void customerlogin() {
+  Get.snackbar(
+      "Login/SignUp", "Please Login/Signup an account to make a booking",
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM);
   //  MySharedPref.clearSession();
   //  Get.offAllNamed(AppPages.INITIAL);
 }

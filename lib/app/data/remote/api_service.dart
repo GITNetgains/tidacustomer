@@ -177,6 +177,27 @@ class ApiService {
     }
   }
 
+  static Future sendBookingNotification(int partner_id) async {
+    try {
+      var client = http.Client();
+      dynamic responseJson;
+      final response = await client.post(
+          Uri.parse(ApiInterface.notificationServiceUrl + Endpoints.sendBookingNotification),
+          body: {
+            "userid": partner_id
+          }
+      );
+      responseJson = returnResponse(response);
+      return responseJson;
+    } catch (e) {
+      Get.snackbar("Internet Connectivity Error",
+          "Please Check your internet connection",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
   static Future getAcademyFullDetails(Map data) async {
     try {
       var client = http.Client();

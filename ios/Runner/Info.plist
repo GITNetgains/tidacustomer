@@ -80,5 +80,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>ITSAppUsesStandardEncryption</key>
+	<true/>
+	<key>ITSAppUsesSecureEnclave</key>
+	<true/>
 </dict>
 </plist>
