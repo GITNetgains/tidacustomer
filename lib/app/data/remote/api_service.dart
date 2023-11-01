@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -177,14 +178,27 @@ class ApiService {
     }
   }
 
-  static Future sendBookingNotification(int partner_id) async {
+  static Future sendBookingNotification(int partnerId) async {
+    late String fcmToken;
+    try {
+      fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
+    } catch (e) {
+      // Get.snackbar("Error",
+      //     "An error has occured",
+      //     backgroundColor: Colors.red,
+      //     colorText: Colors.white,
+      //     snackPosition: SnackPosition.BOTTOM);
+      print(e);
+    }
+
     try {
       var client = http.Client();
       dynamic responseJson;
       final response = await client.post(
           Uri.parse(ApiInterface.notificationServiceUrl + Endpoints.sendBookingNotification),
           body: {
-            "userid": partner_id
+            "userid": partnerId,
+            "fcmToken": fcmToken
           }
       );
       responseJson = returnResponse(response);

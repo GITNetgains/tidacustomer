@@ -93,7 +93,14 @@ class ExperienceDetailsController extends GetxController
             "userid": userId.toString()
           };
          String result = await  easbuzzpayment(datinpns["easepayid"]);
-          resonseapi(datinpns, result);
+          resonseapi(datinpns, result).then((value) {
+            try {
+                ApiService.sendBookingNotification(
+                    int.parse(experiences![0]!.user_id ?? "0"));
+              } catch (e) {
+                print(e);
+              }
+          });
         });
         }
         catch(e)

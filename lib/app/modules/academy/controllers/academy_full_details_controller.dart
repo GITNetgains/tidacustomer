@@ -54,7 +54,7 @@ class AcademyFullDetailsController extends GetxController {
     var data = {
       "userid": userId.value.toString(),
       "token": token.value,
-      "partner_id": academies![0]!.userId.toString(),
+      "partner_id": academies[0]!.userId.toString(),
       "amount": bookingAmt.toString(),
       "booking_user_id": userId.value.toString(), //"1",
       "type": "2", //facilityId.toString(),
@@ -87,7 +87,14 @@ class AcademyFullDetailsController extends GetxController {
               "userid": userId.value.toString()
             };
             String result = await easbuzzpayment(datinpns["easepayid"]);
-            resonseapi(datinpns, result);
+            resonseapi(datinpns, result).then((value) {
+              try {
+                ApiService.sendBookingNotification(
+                    int.parse(academies[0]!.userId.toString()));
+              } catch (e) {
+                print(e);
+              }
+            });
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",
