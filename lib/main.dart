@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -19,7 +21,7 @@ import 'package:http/http.dart' as http;
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await setupFlutterNotifications();
+  // await setupFlutterNotifications();
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   print('Handling a background message ${message.messageId}');
@@ -36,12 +38,65 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // Push Notifications Configuration
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   if (!kIsWeb) {
     await setupFlutterNotifications();
   }
+  // Push Notifications Configuration
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   requestAndRegisterNotification();
+  const initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const DarwinInitializationSettings initializationSettingsDarwin =
+      DarwinInitializationSettings();
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    iOS: initializationSettingsDarwin,
+  );
+  flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    if (notification != null && android != null) {
+      // final http.Response response =
+      //     await http.get(Uri.parse(android.imageUrl ?? ""));
+      // BigPictureStyleInformation bigPictureStyleInformation =
+      //     BigPictureStyleInformation(ByteArrayAndroidBitmap.fromBase64String(
+      //         base64Encode(response.bodyBytes)));
+      // final ByteData data = await rootBundle.load('assets/app_icon.jpg');
+      // final List<int> bytes = data.buffer.asByteData();
+      // File _imageFile = File('assets/app_icon.jpg');
+
+      // // Read bytes from the file object
+      // Uint8List _bytes = await _imageFile.readAsBytes();
+
+      // // base64 encode the bytes
+      // String _base64String = base64.encode(_bytes);
+
+      // Create the BigPictureStyleInformation
+      // final BigPictureStyleInformation bigPictureStyleInformation =
+      //     BigPictureStyleInformation(
+      //         ByteArrayAndroidBitmap.fromBase64String(_base64String));
+
+      flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id, channel.name,
+                channelDescription: channel.description,
+                color: Colors.blue,
+                icon: "@mipmap/ic_launcher",
+                importance: Importance.high,
+                priority: Priority.high,
+                // styleInformation: bigPictureStyleInformation,
+              ),
+              iOS: const DarwinNotificationDetails()),
+          payload: android.imageUrl);
+    }
+  });
 
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
   await MySharedPref.init();
@@ -128,63 +183,63 @@ Future<void> setupFlutterNotifications() async {
   isFlutterLocalNotificationsInitialized = true;
 }
 
-void requestAndRegisterNotification() async {
-  const initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-  const DarwinInitializationSettings initializationSettingsDarwin =
-      DarwinInitializationSettings();
-  const InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-    iOS: initializationSettingsDarwin,
-  );
-  flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+Future<void> requestAndRegisterNotification() async {
+  // const initializationSettingsAndroid =
+  //     AndroidInitializationSettings('@mipmap/ic_launcher');
+  // const DarwinInitializationSettings initializationSettingsDarwin =
+  //     DarwinInitializationSettings();
+  // const InitializationSettings initializationSettings = InitializationSettings(
+  //   android: initializationSettingsAndroid,
+  //   iOS: initializationSettingsDarwin,
+  // );
+  // flutterLocalNotificationsPlugin.initialize(initializationSettings,
+  //     onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-    if (notification != null && android != null) {
-      final http.Response response =
-          await http.get(Uri.parse(android.imageUrl ?? ""));
-      BigPictureStyleInformation bigPictureStyleInformation =
-          BigPictureStyleInformation(ByteArrayAndroidBitmap.fromBase64String(
-              base64Encode(response.bodyBytes)));
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+  //   RemoteNotification? notification = message.notification;
+  //   AndroidNotification? android = message.notification?.android;
+  //   if (notification != null && android != null) {
+  //     final http.Response response =
+  //         await http.get(Uri.parse(android.imageUrl ?? ""));
+  //     BigPictureStyleInformation bigPictureStyleInformation =
+  //         BigPictureStyleInformation(ByteArrayAndroidBitmap.fromBase64String(
+  //             base64Encode(response.bodyBytes)));
 
-      flutterLocalNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-              android: AndroidNotificationDetails(channel.id, channel.name,
-                  channelDescription: channel.description,
-                  color: Colors.blue,
-                  icon: "@mipmap/ic_launcher",
-                  importance: Importance.high,
-                  priority: Priority.high,
-                  styleInformation: bigPictureStyleInformation),
-              iOS: const DarwinNotificationDetails()),
-          payload: android.imageUrl);
-    }
-  });
+  //     flutterLocalNotificationsPlugin.show(
+  //         notification.hashCode,
+  //         notification.title,
+  //         notification.body,
+  //         NotificationDetails(
+  //             android: AndroidNotificationDetails(channel.id, channel.name,
+  //                 channelDescription: channel.description,
+  //                 color: Colors.blue,
+  //                 icon: "@mipmap/ic_launcher",
+  //                 importance: Importance.high,
+  //                 priority: Priority.high,
+  //                 styleInformation: bigPictureStyleInformation),
+  //             iOS: const DarwinNotificationDetails()),
+  //         payload: android.imageUrl);
+  //   }
+  // });
 
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-    // if (notification != null && android != null) {
-    //   showDialog(
-    //       // context: context,
-    //       builder: (_) {
-    //         return AlertDialog(
-    //           title: Text(notification.title ?? ""),
-    //           content: SingleChildScrollView(
-    //             child: Column(
-    //               crossAxisAlignment: CrossAxisAlignment.start,
-    //               children: [Text(notification.body ?? "")],
-    //             ),
-    //           ),
-    //         );
-    //       },
-    //       context: context);
-    // }
-  });
+  // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //   RemoteNotification? notification = message.notification;
+  //   AndroidNotification? android = message.notification?.android;
+  //   // if (notification != null && android != null) {
+  //   //   showDialog(
+  //   //       // context: context,
+  //   //       builder: (_) {
+  //   //         return AlertDialog(
+  //   //           title: Text(notification.title ?? ""),
+  //   //           content: SingleChildScrollView(
+  //   //             child: Column(
+  //   //               crossAxisAlignment: CrossAxisAlignment.start,
+  //   //               children: [Text(notification.body ?? "")],
+  //   //             ),
+  //   //           ),
+  //   //         );
+  //   //       },
+  //   //       context: context);
+  //   // }
+  // });
 }

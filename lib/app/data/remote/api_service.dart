@@ -194,16 +194,21 @@ class ApiService {
     try {
       var client = http.Client();
       dynamic responseJson;
+      Map body = {"userid": partnerId.toString(), "fcmToken": fcmToken};
+      print(body);
       final response = await client.post(
-          Uri.parse(ApiInterface.notificationServiceUrl + Endpoints.sendBookingNotification),
-          body: {
-            "userid": partnerId,
-            "fcmToken": fcmToken
-          }
+        Uri.parse(ApiInterface.notificationServiceUrl +
+            Endpoints.sendBookingNotification),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(body),
       );
       responseJson = returnResponse(response);
       return responseJson;
     } catch (e) {
+      // print("++++++++++++++++++++++++++++++++++++++++++++++");
+      print(e);
       Get.snackbar("Internet Connectivity Error",
           "Please Check your internet connection",
           backgroundColor: Colors.red,

@@ -57,7 +57,7 @@ class FacilitySlotsController extends GetxController {
     var id = params["id"];
     facilityId = id.toString();
     facilityname = params["title"];
-    // amt = "2"; 
+    // amt = "2";
     amt = params["amt"].toString();
     venueid = params["venue_id"].toString();
     debugPrint("params $params, id $id ");
