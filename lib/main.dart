@@ -1,11 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -16,7 +12,6 @@ import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:tida_customer/firebase_options.dart';
-import 'package:http/http.dart' as http;
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -42,7 +37,7 @@ Future<void> main() async {
     await setupFlutterNotifications();
   }
   // Push Notifications Configuration
-  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   requestAndRegisterNotification();
   const initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -98,6 +93,27 @@ Future<void> main() async {
     }
   });
 
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    if (notification != null && android != null) {
+      // showDialog(
+      //   context: context,
+      //   builder: (_) {
+      //     return AlertDialog(
+      //       title: Text(notification.title ?? ""),
+      //       content: SingleChildScrollView(
+      //         child: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: [Text(notification.body ?? "")],
+      //         ),
+      //       ),
+      //     );
+      //   },
+      // );
+    }
+  });
+
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
   await MySharedPref.init();
 
@@ -134,6 +150,9 @@ void onDidReceiveNotificationResponse(
   final String? payload = notificationResponse.payload;
   if (notificationResponse.payload != null) {
     debugPrint('notification payload: $payload');
+    Get.toNamed(
+      AppPages.ORDERS,
+    );
   }
 }
 

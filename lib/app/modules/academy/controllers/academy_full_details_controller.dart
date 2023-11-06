@@ -87,14 +87,7 @@ class AcademyFullDetailsController extends GetxController {
               "userid": userId.value.toString()
             };
             String result = await easbuzzpayment(datinpns["easepayid"]);
-            resonseapi(datinpns, result).then((value) {
-              try {
-                ApiService.sendBookingNotification(
-                    int.parse(academies[0]!.userId.toString()));
-              } catch (e) {
-                print(e);
-              }
-            });
+            resonseapi(datinpns, result);
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",
@@ -123,6 +116,12 @@ class AcademyFullDetailsController extends GetxController {
     try {
       if (result == "payment_successfull") {
         await ApiService.responseorder(data).then((respons) {
+          try {
+            ApiService.sendBookingNotification(
+                int.parse(academies[0]!.userId.toString()));
+          } catch (e) {
+            print(e);
+          }
           Get.snackbar("Payment Sucessful", "Slot booked successfully",
               backgroundColor: Colors.green,
               colorText: Colors.white,

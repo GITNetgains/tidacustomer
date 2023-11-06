@@ -8,20 +8,20 @@ import 'package:tida_customer/app/data/models/facility_payment_model.dart';
 import 'package:tida_customer/app/data/remote/api_service.dart';
 import 'package:tida_customer/app/modules/Booking/model/AllOrdersResponse.dart';
 import 'package:tida_customer/app/modules/Home/models/logout_model.dart';
-import 'package:tida_customer/app/modules/facility/models/facility_booking_model.dart' as book;
+import 'package:tida_customer/app/modules/facility/models/facility_booking_model.dart'
+    as book;
 import 'package:tida_customer/app/routes/app_pages.dart';
 
-class BookingController extends GetxController
-{
+class BookingController extends GetxController {
   static MethodChannel channel = MethodChannel('easebuzz');
-    String? userId, userName, token;
+  String? userId, userName, token;
   RxBool loading = false.obs;
   RxList<Data> orderList = <Data>[].obs;
   RxInt index = (-1).obs;
   RxDouble rating = 3.0.obs;
   TextEditingController reviewController = TextEditingController();
- bool isLoading = false;
- bool isBooking = false;
+  bool isLoading = false;
+  bool isBooking = false;
   String? slotId = "";
 
   @override
@@ -49,7 +49,6 @@ class BookingController extends GetxController
         orderList = orderList.reversed.toList().obs;
       }
     }
-
     loading(false);
   }
 
@@ -92,8 +91,8 @@ class BookingController extends GetxController
     });
   }
 
-
-Future<void> bookFacilitySlot(startTime, endTime, facilityId, slotdate,partnerid, amt) async {
+  Future<void> bookFacilitySlot(
+      startTime, endTime, facilityId, slotdate, partnerid, amt) async {
     var data = {
       "userid": userId.toString(),
       "token": token,
@@ -109,7 +108,7 @@ Future<void> bookFacilitySlot(startTime, endTime, facilityId, slotdate,partnerid
           book.slotBookingResponseModelFromJson(response);
       if (res.status!) {
         slotId = res.data!.isNotEmpty ? res.data![0].id.toString() : null;
-        paymentFacilitySlot(partnerid,amt,slotId.toString());
+        paymentFacilitySlot(partnerid, amt, slotId.toString());
         update();
       } else {
         isBooking = false;
@@ -124,8 +123,7 @@ Future<void> bookFacilitySlot(startTime, endTime, facilityId, slotdate,partnerid
     });
   }
 
-Future<void> exppaymentSlot(partnerid,amt,expid) async {
-    
+  Future<void> exppaymentSlot(partnerid, amt, expid) async {
     var data = {
       "userid": userId.toString(),
       "token": token,
@@ -151,25 +149,23 @@ Future<void> exppaymentSlot(partnerid,amt,expid) async {
           "token": token,
           "order_id": res.order_id.toString()
         };
-        try{
-        ApiService.processorder(datainp).then((respons) async{
-          var datinpns = {
-            "easepayid": jsonDecode(respons)["data"],
-            "order_id": res.order_id.toString(),
-            "status": "1",
-            "token": token,
-            "userid": userId.toString()
-          };
-         String result = await  easbuzzpayment(datinpns["easepayid"]);
-          resonseapi(datinpns, result);
-        });
-        }
-        catch(e)
-        {
-           Get.snackbar("Payment Error", "Couldnt initate Payment",
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM);
+        try {
+          ApiService.processorder(datainp).then((respons) async {
+            var datinpns = {
+              "easepayid": jsonDecode(respons)["data"],
+              "order_id": res.order_id.toString(),
+              "status": "1",
+              "token": token,
+              "userid": userId.toString()
+            };
+            String result = await easbuzzpayment(datinpns["easepayid"]);
+            resonseapi(datinpns, result, partnerid);
+          });
+        } catch (e) {
+          Get.snackbar("Payment Error", "Couldnt initate Payment",
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM);
         }
         // Get.to(() => PaymentScreen(""));
         // await initPaymentSheet(bookingAmt.toString(), res.order_id.toString());
@@ -187,10 +183,10 @@ Future<void> exppaymentSlot(partnerid,amt,expid) async {
       update();
     });
   }
-  Future<void> academyexppayment(partnerid,bookingAmt,packageId) async
-  {
+
+  Future<void> academyexppayment(partnerid, bookingAmt, packageId) async {
     print("$partnerid,$bookingAmt,$packageId");
-     var data = {
+    var data = {
       "userid": userId.toString(),
       "token": token,
       "partner_id": partnerid,
@@ -208,7 +204,7 @@ Future<void> exppaymentSlot(partnerid,amt,expid) async {
     await ApiService.paymentBookFacilitySlots(data).then((response) async {
       FacilityPaymentResModel? res = facilityPaymentResModelFromJson(response);
       if (res.status!) {
-        isBooking =false;
+        isBooking = false;
         update();
         var datainp = {
           "userid": userId.toString(),
@@ -226,7 +222,7 @@ Future<void> exppaymentSlot(partnerid,amt,expid) async {
               "userid": userId.toString()
             };
             String result = await easbuzzpayment(datinpns["easepayid"]);
-            resonseapi(datinpns, result);
+            resonseapi(datinpns, result, partnerid);
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",
@@ -236,7 +232,7 @@ Future<void> exppaymentSlot(partnerid,amt,expid) async {
         }
         // Get.to(() => PaymentScreen(""));
         // await initPaymentSheet(bookingAmt.toString(), res.order_id.toString());
-        isLoading =false;
+        isLoading = false;
         update();
       } else {
         isBooking = false;
@@ -250,7 +246,8 @@ Future<void> exppaymentSlot(partnerid,amt,expid) async {
     });
   }
 
-Future<void> paymentFacilitySlot(String partner_id,String amt,String slotId) async {
+  Future<void> paymentFacilitySlot(
+      String partner_id, String amt, String slotId) async {
     var data = {
       "userid": userId.toString(),
       "token": token,
@@ -287,8 +284,7 @@ Future<void> paymentFacilitySlot(String partner_id,String amt,String slotId) asy
             };
             // String result = await easbuzzpayment(datinpns["easepayid"]);
             // print(result);
-            resonseapi(datinpns, "payment_successfull");
-
+            resonseapi(datinpns, "payment_successfull", partner_id);
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",
@@ -322,10 +318,15 @@ Future<void> paymentFacilitySlot(String partner_id,String amt,String slotId) asy
     return result;
   }
 
-  Future resonseapi(Map data, String result) async {
+  Future resonseapi(Map data, String result, String partnerId) async {
     // print(datinpns);
     try {
       if (result == "payment_successfull") {
+        try {
+          ApiService.sendBookingNotification(int.parse(partnerId));
+        } catch (e) {
+          print(e);
+        }
         await ApiService.responseorder(data).then((respons) {
           Get.snackbar("Sucessful", "Slot booked successfully",
               backgroundColor: Colors.green,
@@ -349,6 +350,7 @@ Future<void> paymentFacilitySlot(String partner_id,String amt,String slotId) asy
           snackPosition: SnackPosition.BOTTOM);
     }
   }
+
   _getOrderType(String type) {
 //type: 1-venue/facility,2-academy/session,3-tournament,4-experience
     switch (type) {

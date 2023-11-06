@@ -217,14 +217,7 @@ class FacilitySlotsController extends GetxController {
             };
             String result = await easbuzzpayment(datinpns["easepayid"]);
             print(result);
-            resonseapi(datinpns, result).then((value) {
-              try {
-                ApiService.sendBookingNotification(
-                    int.parse(partner_id ?? "0"));
-              } catch (e) {
-                print(e);
-              }
-            });
+            resonseapi(datinpns, result);
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",
@@ -263,11 +256,16 @@ class FacilitySlotsController extends GetxController {
     try {
       if (result == "payment_successfull") {
         await ApiService.responseorder(data).then((respons) {
+          try {
+            ApiService.sendBookingNotification(int.parse(partner_id ?? "0"));
+          } catch (e) {
+            print(e);
+          }
           Get.snackbar("Sucessful", "Slot booked successfully",
               backgroundColor: Colors.green,
               colorText: Colors.white,
               snackPosition: SnackPosition.BOTTOM);
-          Future.delayed(Duration(milliseconds: 10), () {
+          Future.delayed(const Duration(milliseconds: 10), () {
             Get.offNamedUntil(AppPages.HOME, ModalRoute.withName('/home'));
           });
         });
