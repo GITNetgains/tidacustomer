@@ -163,13 +163,24 @@ Future<void> setupFlutterNotifications() async {
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  final bool? result = await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>()
+      ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
     announcement: false,
     badge: true,
     carPlay: false,
     criticalAlert: false,
-    provisional: false,
+    provisional: true,
     sound: true,
   );
 
@@ -180,8 +191,6 @@ Future<void> setupFlutterNotifications() async {
         'This channel is used for important notifications.', // description
     importance: Importance.high,
   );
-
-  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   /// Create an Android Notification Channel.
   ///
