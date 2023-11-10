@@ -178,7 +178,7 @@ class ApiService {
     }
   }
 
-  static Future sendBookingNotification(int partnerId) async {
+  static Future sendBookingNotification(int partnerId, int orderId) async {
     late String fcmToken;
     try {
       fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
@@ -194,7 +194,11 @@ class ApiService {
     try {
       var client = http.Client();
       dynamic responseJson;
-      Map body = {"userid": partnerId.toString(), "fcmToken": fcmToken};
+      Map body = {
+        "userid": partnerId.toString(),
+        "fcmToken": fcmToken,
+        "order_id": orderId
+      };
       print(body);
       final response = await client.post(
         Uri.parse(ApiInterface.notificationServiceUrl +

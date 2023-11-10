@@ -7,12 +7,25 @@ import 'package:tida_customer/app/modules/Home/controllers/home_controller.dart'
 import 'package:tida_customer/app/modules/Home/views/menu_bar.dart';
 import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
+import 'package:tida_customer/main.dart';
 import 'package:tida_customer/utils/color_utils.dart';
 import 'package:tida_customer/utils/constants.dart';
 import 'package:tida_customer/utils/custom_cards.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) async => await setupInteractedMessage());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -416,18 +429,18 @@ class HomeView extends StatelessWidget {
                           setXSmallLabel("There are no experiences nearby.")),
                 )
               : SizedBox(
-                height: 257.h,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: c.experienceslist!.length,
-                    itemBuilder: (context, index) {
-                      return experincecard(
-                          c.experienceslist![index]!.image.toString(),
-                          c.experienceslist![index]!.title.toString(),
-                          c.experienceslist![index]!.description.toString(),
-                          c.experienceslist![index]!.id.toString());
-                    }),
-              ),
+                  height: 257.h,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: c.experienceslist!.length,
+                      itemBuilder: (context, index) {
+                        return experincecard(
+                            c.experienceslist![index]!.image.toString(),
+                            c.experienceslist![index]!.title.toString(),
+                            c.experienceslist![index]!.description.toString(),
+                            c.experienceslist![index]!.id.toString());
+                      }),
+                ),
         ],
       );
     });

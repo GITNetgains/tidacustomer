@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +10,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tida_customer/app/data/local/my_shared_pref.dart';
 import 'package:tida_customer/app/data/models/notification_model.dart';
+import 'package:tida_customer/app/modules/Booking/controllers/orders_controller.dart';
+import 'package:tida_customer/app/modules/orders/views/order_details.dart';
 import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -36,6 +41,7 @@ Future<void> main() async {
   if (!kIsWeb) {
     await setupFlutterNotifications();
   }
+
   // Push Notifications Configuration
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   requestAndRegisterNotification();
@@ -47,12 +53,17 @@ Future<void> main() async {
     android: initializationSettingsAndroid,
     iOS: initializationSettingsDarwin,
   );
-  flutterLocalNotificationsPlugin.initialize(initializationSettings,
-      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
+  flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+    onDidReceiveBackgroundNotificationResponse:
+        onDidReceiveBackgroundNotificationResponse,
+  );
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
+    print(message.data);
     if (notification != null && android != null) {
       // final http.Response response =
       //     await http.get(Uri.parse(android.imageUrl ?? ""));
@@ -89,13 +100,14 @@ Future<void> main() async {
                 // styleInformation: bigPictureStyleInformation,
               ),
               iOS: const DarwinNotificationDetails()),
-          payload: android.imageUrl);
+          payload: json.encode(message.data));
     }
   });
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
+    debugPrint("onmessageopenedapp");
     if (notification != null && android != null) {
       // showDialog(
       //   context: context,
@@ -111,7 +123,12 @@ Future<void> main() async {
       //     );
       //   },
       // );
+      //    BookingController _c = Get.put(BookingController());
+      // _c.selectedBookingId(data["order_id"]);
     }
+    Get.toNamed(
+      AppPages.ORDERS,
+    );
   });
 
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
@@ -145,14 +162,59 @@ Future<void> main() async {
       })));
 }
 
+Future<void> setupInteractedMessage() async {
+  final NotificationAppLaunchDetails? notificationAppLaunchDetails = !kIsWeb &&
+          Platform.isLinux
+      ? null
+      : await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+  if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+    // selectedNotificationPayload =
+    //     notificationAppLaunchDetails!.notificationResponse?.payload;
+    // initialRoute = SecondPage.routeName;
+    // print(notificationAppLaunchDetails!.notificationResponse?.payload);
+    Map<String, dynamic> data = json.decode(
+        notificationAppLaunchDetails!.notificationResponse?.payload ?? "");
+    BookingController _c = Get.put(BookingController());
+    _c.selectedBookingId(data["order_id"]);
+    Get.to(() => OrderDetails());
+  }
+}
+
 void onDidReceiveNotificationResponse(
     NotificationResponse notificationResponse) async {
   final String? payload = notificationResponse.payload;
   if (notificationResponse.payload != null) {
     debugPrint('notification payload: $payload');
-    Get.toNamed(
-      AppPages.ORDERS,
-    );
+    Map<String, dynamic> data = json.decode(payload ?? "");
+    print(data["order_id"]);
+    // Get.toNamed(
+    //   AppPages.ORDERS,
+    // );
+    BookingController _c = Get.put(BookingController());
+    _c.selectedBookingId(data["order_id"]);
+    Get.to(() => OrderDetails());
+  }
+}
+
+@pragma('vm:entry-point')
+void onDidReceiveBackgroundNotificationResponse(
+    NotificationResponse notificationResponse) {
+  debugPrint("ondidrecievebackgroundnotificationresponse  ");
+  print('notification(${notificationResponse.id}) action tapped: '
+      '${notificationResponse.actionId} with'
+      ' payload: ${notificationResponse.payload}');
+
+  final String? payload = notificationResponse.payload;
+  if (notificationResponse.payload != null) {
+    debugPrint('notification payload: $payload');
+    Map<String, dynamic> data = json.decode(payload ?? "");
+    print(data["order_id"]);
+    // Get.toNamed(
+    //   AppPages.ORDERS,
+    // );
+    BookingController _c = Get.put(BookingController());
+    _c.selectedBookingId(data["order_id"]);
+    Get.to(() => OrderDetails());
   }
 }
 

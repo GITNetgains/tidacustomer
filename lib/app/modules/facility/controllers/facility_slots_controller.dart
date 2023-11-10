@@ -215,9 +215,15 @@ class FacilitySlotsController extends GetxController {
               "token": token,
               "userid": userId.toString()
             };
-            String result = await easbuzzpayment(datinpns["easepayid"]);
-            print(result);
-            resonseapi(datinpns, result);
+            // String result = await easbuzzpayment(datinpns["easepayid"]);
+            // print(result);
+            // resonseapi(datinpns, result, res.order_id ?? 0);
+            try {
+              ApiService.sendBookingNotification(
+                  int.parse(partner_id ?? "0"), res.order_id ?? 0);
+            } catch (e) {
+              print(e);
+            }
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",
@@ -251,13 +257,14 @@ class FacilitySlotsController extends GetxController {
     return result;
   }
 
-  Future resonseapi(Map data, String result) async {
+  Future resonseapi(Map data, String result, int orderId) async {
     // print(datinpns);
     try {
       if (result == "payment_successfull") {
         await ApiService.responseorder(data).then((respons) {
           try {
-            ApiService.sendBookingNotification(int.parse(partner_id ?? "0"));
+            ApiService.sendBookingNotification(
+                int.parse(partner_id ?? "0"), orderId);
           } catch (e) {
             print(e);
           }

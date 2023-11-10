@@ -23,21 +23,33 @@ class BookingController extends GetxController {
   bool isLoading = false;
   bool isBooking = false;
   String? slotId = "";
+  RxString selectedBookingId = "".obs;
 
   @override
-  void onInit() {
-    init();
+  Future<void> onInit() async {
+    await init();
+    if (selectedBookingId.value != "") {
+      for (int i = 0; i < orderList.length; i++) {
+        if (orderList[i].id == selectedBookingId.value) {
+          index(i);
+        }
+      }
+    }
+    update();
     super.onInit();
   }
 
-  void init() async {
+  Future<void> init() async {
+    loading(true);
     userId = MySharedPref.getid();
     userName = MySharedPref.getName();
     token = MySharedPref.getauthtoken();
-    fetchOrders();
+    await fetchOrders();
+    loading(false);
+    update();
   }
 
-  void fetchOrders() async {
+  Future<void> fetchOrders() async {
     loading(true);
     orderList.clear();
     var data = {"userid": userId.toString(), "token": token};
@@ -159,7 +171,7 @@ class BookingController extends GetxController {
               "userid": userId.toString()
             };
             String result = await easbuzzpayment(datinpns["easepayid"]);
-            resonseapi(datinpns, result, partnerid);
+            resonseapi(datinpns, result, partnerid, res.order_id ?? 0);
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",
@@ -222,7 +234,7 @@ class BookingController extends GetxController {
               "userid": userId.toString()
             };
             String result = await easbuzzpayment(datinpns["easepayid"]);
-            resonseapi(datinpns, result, partnerid);
+            resonseapi(datinpns, result, partnerid, res.order_id ?? 0);
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",
@@ -284,7 +296,8 @@ class BookingController extends GetxController {
             };
             // String result = await easbuzzpayment(datinpns["easepayid"]);
             // print(result);
-            resonseapi(datinpns, "payment_successfull", partner_id);
+            resonseapi(
+                datinpns, "payment_successfull", partner_id, res.order_id ?? 0);
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",
@@ -318,12 +331,13 @@ class BookingController extends GetxController {
     return result;
   }
 
-  Future resonseapi(Map data, String result, String partnerId) async {
+  Future resonseapi(
+      Map data, String result, String partnerId, int orderId) async {
     // print(datinpns);
     try {
       if (result == "payment_successfull") {
         try {
-          ApiService.sendBookingNotification(int.parse(partnerId));
+          ApiService.sendBookingNotification(int.parse(partnerId), orderId);
         } catch (e) {
           print(e);
         }

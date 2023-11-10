@@ -87,7 +87,7 @@ class AcademyFullDetailsController extends GetxController {
               "userid": userId.value.toString()
             };
             String result = await easbuzzpayment(datinpns["easepayid"]);
-            resonseapi(datinpns, result);
+            resonseapi(datinpns, result, res.order_id ?? 0);
           });
         } catch (e) {
           Get.snackbar("Payment Error", "Couldnt initate Payment",
@@ -111,14 +111,14 @@ class AcademyFullDetailsController extends GetxController {
     });
   }
 
-  Future resonseapi(Map data, String result) async {
+  Future resonseapi(Map data, String result, int orderId) async {
     // print(datinpns);
     try {
       if (result == "payment_successfull") {
         await ApiService.responseorder(data).then((respons) {
           try {
             ApiService.sendBookingNotification(
-                int.parse(academies[0]!.userId.toString()));
+                int.parse(academies[0]!.userId.toString()), orderId);
           } catch (e) {
             print(e);
           }

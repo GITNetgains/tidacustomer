@@ -9,8 +9,7 @@ import 'package:tida_customer/app/data/remote/api_service.dart';
 import 'package:tida_customer/app/modules/experience/models/experience_list_reponse.dart';
 import 'package:tida_customer/app/routes/app_pages.dart';
 
-class ExperienceDetailsController extends GetxController
-{
+class ExperienceDetailsController extends GetxController {
   String? userId, userName, token;
   static MethodChannel channel = MethodChannel('easebuzz');
   List<Datum?>? experiences = List.empty(growable: true);
@@ -57,7 +56,6 @@ class ExperienceDetailsController extends GetxController
   }*/
 
   Future<void> paymentFacilitySlot() async {
-    
     var data = {
       "userid": userId.toString(),
       "token": token,
@@ -83,32 +81,23 @@ class ExperienceDetailsController extends GetxController
           "token": token,
           "order_id": res.order_id.toString()
         };
-        try{
-        ApiService.processorder(datainp).then((respons) async{
-          var datinpns = {
-            "easepayid": jsonDecode(respons)["data"],
-            "order_id": res.order_id.toString(),
-            "status": "1",
-            "token": token,
-            "userid": userId.toString()
-          };
-         String result = await  easbuzzpayment(datinpns["easepayid"]);
-          resonseapi(datinpns, result).then((value) {
-            try {
-                ApiService.sendBookingNotification(
-                    int.parse(experiences![0]!.user_id ?? "0"));
-              } catch (e) {
-                print(e);
-              }
+        try {
+          ApiService.processorder(datainp).then((respons) async {
+            var datinpns = {
+              "easepayid": jsonDecode(respons)["data"],
+              "order_id": res.order_id.toString(),
+              "status": "1",
+              "token": token,
+              "userid": userId.toString()
+            };
+            String result = await easbuzzpayment(datinpns["easepayid"]);
+            resonseapi(datinpns, result, res.order_id ?? 0);
           });
-        });
-        }
-        catch(e)
-        {
-           Get.snackbar("Payment Error", "Couldnt initate Payment",
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM);
+        } catch (e) {
+          Get.snackbar("Payment Error", "Couldnt initate Payment",
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM);
         }
         // Get.to(() => PaymentScreen(""));
         // await initPaymentSheet(bookingAmt.toString(), res.order_id.toString());
@@ -190,6 +179,7 @@ class ExperienceDetailsController extends GetxController
       update();
     });
   }
+
   Future<String> easbuzzpayment(accesskey) async {
     String access_key = accesskey;
     String pay_mode = "production";
@@ -200,35 +190,36 @@ class ExperienceDetailsController extends GetxController
     return result;
   }
 
-  Future resonseapi(Map data, String result) async{
+  Future resonseapi(Map data, String result, int orderId) async {
     // print(datinpns);
-    try{
-      if(result == "payment_successfull")
-      {
-    await ApiService.responseorder(data).then((respons) {
-      Get.snackbar("Payment Sucessful", "Slot booked successfully",
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM);
-       Future.delayed(Duration(milliseconds: 10), () {
-            Get.offNamedUntil(AppPages.HOME,ModalRoute.withName('/home') );
+    try {
+      if (result == "payment_successfull") {
+        await ApiService.responseorder(data).then((respons) {
+          try {
+            ApiService.sendBookingNotification(
+                int.parse(experiences![0]!.user_id ?? "0"), orderId);
+          } catch (e) {
+            print(e);
+          }
+          Get.snackbar("Payment Sucessful", "Slot booked successfully",
+              backgroundColor: Colors.green,
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM);
+          Future.delayed(Duration(milliseconds: 10), () {
+            Get.offNamedUntil(AppPages.HOME, ModalRoute.withName('/home'));
           });
-    });
-      }
-      else
-      {
+        });
+      } else {
         Get.snackbar("Payment Error", "Couldnt Process Payment",
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM);
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM);
       }
-  }
-  catch(e)
-  {
-    Get.snackbar("Payment Error", result,
+    } catch (e) {
+      Get.snackbar("Payment Error", result,
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM);
+    }
   }
-}
 }
