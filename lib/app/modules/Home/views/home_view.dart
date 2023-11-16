@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tida_customer/app/components/app_bottom_sheet.dart';
 import 'package:tida_customer/app/modules/Home/controllers/home_controller.dart';
 import 'package:tida_customer/app/modules/Home/views/menu_bar.dart';
@@ -20,11 +21,47 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  bool askPermission = false;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance
         .addPostFrameCallback((_) async => await setupInteractedMessage());
+
+    Future(() {
+      return requestNotificationPermissions(context);
+    }).then((value) {
+      if (!askPermission && !value) {
+        // Notification permissions permanently denied, open app settings
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Alert'),
+              content:
+                  const Text('Please enable notifications in app settings.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    askPermission = true;
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await openAppSettings()
+                        .then((value) => Navigator.of(context).pop());
+                  },
+                  child: const Text('Continue'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
   }
 
   @override

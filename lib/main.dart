@@ -17,6 +17,7 @@ import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:tida_customer/firebase_options.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -33,6 +34,15 @@ PushNotificationModel? _notificationInfo;
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 late AndroidNotificationChannel channel;
 bool isFlutterLocalNotificationsInitialized = false;
+
+Future<bool> requestNotificationPermissions(BuildContext context) async {
+  final PermissionStatus status = await Permission.notification.request();
+  if (status.isGranted) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

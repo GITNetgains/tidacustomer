@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tida_customer/app/components/app_bottom_sheet.dart';
 import 'package:tida_customer/app/components/custom_button.dart';
 import 'package:tida_customer/app/components/text_field.dart';
@@ -8,6 +9,7 @@ import 'package:tida_customer/app/components/text_form_field.dart';
 import 'package:tida_customer/app/modules/login/controllers/login_controller.dart';
 import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
+import 'package:tida_customer/main.dart';
 import 'package:tida_customer/utils/color_utils.dart';
 import 'package:tida_customer/utils/common_utils.dart';
 import 'package:tida_customer/utils/constants.dart';
@@ -19,7 +21,7 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<LoginController>(builder: (c) {
       return Scaffold(
-        bottomSheet: AppBottomSheet(),
+        bottomSheet: const AppBottomSheet(),
         body: Padding(
           padding: const EdgeInsets.all(16.0).h,
           child: basebody(
