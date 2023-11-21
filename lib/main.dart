@@ -52,9 +52,6 @@ Future<void> main() async {
     await setupFlutterNotifications();
   }
 
-  // Push Notifications Configuration
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  requestAndRegisterNotification();
   const initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
   const DarwinInitializationSettings initializationSettingsDarwin =
@@ -74,27 +71,7 @@ Future<void> main() async {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
     print(message.data);
-    if (notification != null && android != null) {
-      // final http.Response response =
-      //     await http.get(Uri.parse(android.imageUrl ?? ""));
-      // BigPictureStyleInformation bigPictureStyleInformation =
-      //     BigPictureStyleInformation(ByteArrayAndroidBitmap.fromBase64String(
-      //         base64Encode(response.bodyBytes)));
-      // final ByteData data = await rootBundle.load('assets/app_icon.jpg');
-      // final List<int> bytes = data.buffer.asByteData();
-      // File _imageFile = File('assets/app_icon.jpg');
-
-      // // Read bytes from the file object
-      // Uint8List _bytes = await _imageFile.readAsBytes();
-
-      // // base64 encode the bytes
-      // String _base64String = base64.encode(_bytes);
-
-      // Create the BigPictureStyleInformation
-      // final BigPictureStyleInformation bigPictureStyleInformation =
-      //     BigPictureStyleInformation(
-      //         ByteArrayAndroidBitmap.fromBase64String(_base64String));
-
+    if (notification != null) {
       flutterLocalNotificationsPlugin.show(
           notification.hashCode,
           notification.title,
@@ -105,40 +82,13 @@ Future<void> main() async {
                 channelDescription: channel.description,
                 color: Colors.blue,
                 icon: "@mipmap/ic_launcher",
-                importance: Importance.high,
-                priority: Priority.high,
+                importance: Importance.max,
+                priority: Priority.max,
                 // styleInformation: bigPictureStyleInformation,
               ),
               iOS: const DarwinNotificationDetails()),
           payload: json.encode(message.data));
     }
-  });
-
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-    debugPrint("onmessageopenedapp");
-    if (notification != null && android != null) {
-      // showDialog(
-      //   context: context,
-      //   builder: (_) {
-      //     return AlertDialog(
-      //       title: Text(notification.title ?? ""),
-      //       content: SingleChildScrollView(
-      //         child: Column(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: [Text(notification.body ?? "")],
-      //         ),
-      //       ),
-      //     );
-      //   },
-      // );
-      //    BookingController _c = Get.put(BookingController());
-      // _c.selectedBookingId(data["order_id"]);
-    }
-    Get.toNamed(
-      AppPages.ORDERS,
-    );
   });
 
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
@@ -173,19 +123,18 @@ Future<void> main() async {
 }
 
 Future<void> setupInteractedMessage() async {
-  final NotificationAppLaunchDetails? notificationAppLaunchDetails = !kIsWeb &&
-          Platform.isLinux
-      ? null
-      : await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-  if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
-    // selectedNotificationPayload =
-    //     notificationAppLaunchDetails!.notificationResponse?.payload;
-    // initialRoute = SecondPage.routeName;
-    // print(notificationAppLaunchDetails!.notificationResponse?.payload);
-    Map<String, dynamic> data = json.decode(
-        notificationAppLaunchDetails!.notificationResponse?.payload ?? "");
+  RemoteMessage? initialMessage =
+      await FirebaseMessaging.instance.getInitialMessage();
+  if (initialMessage != null) {
+    _handleMessage(initialMessage);
+  }
+  FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+}
+
+void _handleMessage(RemoteMessage message) {
+  if (message.data.containsKey("order_id")) {
     BookingController _c = Get.put(BookingController());
-    _c.selectedBookingId(data["order_id"]);
+    _c.selectedBookingId(message.data["order_id"]);
     Get.to(() => OrderDetails());
   }
 }
@@ -197,9 +146,6 @@ void onDidReceiveNotificationResponse(
     debugPrint('notification payload: $payload');
     Map<String, dynamic> data = json.decode(payload ?? "");
     print(data["order_id"]);
-    // Get.toNamed(
-    //   AppPages.ORDERS,
-    // );
     BookingController _c = Get.put(BookingController());
     _c.selectedBookingId(data["order_id"]);
     Get.to(() => OrderDetails());
@@ -233,7 +179,7 @@ Future<void> setupFlutterNotifications() async {
     return;
   }
 
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -246,7 +192,7 @@ Future<void> setupFlutterNotifications() async {
         sound: true,
       );
 
-  NotificationSettings settings = await messaging.requestPermission(
+  NotificationSettings settings = await _messaging.requestPermission(
     alert: true,
     announcement: false,
     badge: true,
@@ -275,71 +221,10 @@ Future<void> setupFlutterNotifications() async {
 
   /// Update the iOS foreground notification presentation options to allow
   /// heads up notifications.
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+  await _messaging.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
     sound: true,
   );
   isFlutterLocalNotificationsInitialized = true;
-}
-
-Future<void> requestAndRegisterNotification() async {
-  // const initializationSettingsAndroid =
-  //     AndroidInitializationSettings('@mipmap/ic_launcher');
-  // const DarwinInitializationSettings initializationSettingsDarwin =
-  //     DarwinInitializationSettings();
-  // const InitializationSettings initializationSettings = InitializationSettings(
-  //   android: initializationSettingsAndroid,
-  //   iOS: initializationSettingsDarwin,
-  // );
-  // flutterLocalNotificationsPlugin.initialize(initializationSettings,
-  //     onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
-
-  // FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-  //   RemoteNotification? notification = message.notification;
-  //   AndroidNotification? android = message.notification?.android;
-  //   if (notification != null && android != null) {
-  //     final http.Response response =
-  //         await http.get(Uri.parse(android.imageUrl ?? ""));
-  //     BigPictureStyleInformation bigPictureStyleInformation =
-  //         BigPictureStyleInformation(ByteArrayAndroidBitmap.fromBase64String(
-  //             base64Encode(response.bodyBytes)));
-
-  //     flutterLocalNotificationsPlugin.show(
-  //         notification.hashCode,
-  //         notification.title,
-  //         notification.body,
-  //         NotificationDetails(
-  //             android: AndroidNotificationDetails(channel.id, channel.name,
-  //                 channelDescription: channel.description,
-  //                 color: Colors.blue,
-  //                 icon: "@mipmap/ic_launcher",
-  //                 importance: Importance.high,
-  //                 priority: Priority.high,
-  //                 styleInformation: bigPictureStyleInformation),
-  //             iOS: const DarwinNotificationDetails()),
-  //         payload: android.imageUrl);
-  //   }
-  // });
-
-  // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-  //   RemoteNotification? notification = message.notification;
-  //   AndroidNotification? android = message.notification?.android;
-  //   // if (notification != null && android != null) {
-  //   //   showDialog(
-  //   //       // context: context,
-  //   //       builder: (_) {
-  //   //         return AlertDialog(
-  //   //           title: Text(notification.title ?? ""),
-  //   //           content: SingleChildScrollView(
-  //   //             child: Column(
-  //   //               crossAxisAlignment: CrossAxisAlignment.start,
-  //   //               children: [Text(notification.body ?? "")],
-  //   //             ),
-  //   //           ),
-  //   //         );
-  //   //       },
-  //   //       context: context);
-  //   // }
-  // });
 }
