@@ -19,17 +19,23 @@ class AcademyListView extends StatelessWidget {
           title: setHeadlineMedium("Academies", color: Colors.white),
         ),
         body: RefreshIndicator(
-          onRefresh: c.getAcademies,
+          onRefresh: () async {
+            return c.getAcademies();
+          },
           child: basebody(
-            c.isLoading!.value,
-          c.isLoading!.value == false & c.academies!.isEmpty
+            c.isLoading.value,
+            c.academies!.isEmpty
                 ? NoData()
                 : ListView.builder(
                     scrollDirection: Axis.vertical,
                     padding: const EdgeInsets.all(8),
                     itemCount: c.academies!.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return academyCard(c.academies![index]!.logo.toString(), c.academies![index]!.name.toString(), c.academies![index]!.description.toString(), c.academies![index]!.id!.toString());
+                      return academyCard(
+                          c.academies![index]!.logo.toString(),
+                          c.academies![index]!.name.toString(),
+                          c.academies![index]!.description.toString(),
+                          c.academies![index]!.id!.toString());
                     }),
           ),
         ),

@@ -4,8 +4,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:tida_customer/app/data/local/my_shared_pref.dart';
 import 'package:tida_customer/app/data/remote/api_interface.dart';
 import 'package:tida_customer/app/data/remote/endpoints.dart';
+import 'package:tida_customer/utils/common_utils.dart';
 
 class ApiService {
   static dynamic returnResponse(http.Response response) {
@@ -179,6 +181,7 @@ class ApiService {
   }
 
   static Future sendBookingNotification(int partnerId, int orderId) async {
+    String user_id =  MySharedPref.getid() ?? "0";
     late String fcmToken;
     try {
       fcmToken = await FirebaseMessaging.instance.getToken() ?? "";
@@ -197,7 +200,8 @@ class ApiService {
       Map body = {
         "userid": partnerId.toString(),
         "fcmToken": fcmToken,
-        "order_id": orderId
+        "order_id": orderId,
+        "customerUserId": user_id
       };
       print(body);
       final response = await client.post(
@@ -218,6 +222,47 @@ class ApiService {
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM);
+    }
+  }
+
+  Future<String> getFcmToken() async {
+    String user_id =  MySharedPref.getid() ?? "0";
+
+    var request = http.MultipartRequest('POST', Uri.parse(ApiInterface.baseUrl + Endpoints.getFcmToken));
+    request.fields['userid'] = user_id;
+
+    var response = await request.send();
+
+    var responsed = await http.Response.fromStream(response);
+    print(jsonDecode(responsed.body));
+    var res = jsonDecode(responsed.body);
+    if (response.statusCode == 200) {
+      return res["fcm_token"] ?? "";
+    } else {
+      return "";
+    }
+  }
+
+  Future<String> updateFcmToken(String fcmToken) async {
+    String token = MySharedPref.getauthtoken() ?? "0";
+    String user_id = MySharedPref.getid() ?? "0";
+    String deviceId = await getId() ?? "0";
+
+    var request = http.MultipartRequest('POST', Uri.parse(ApiInterface.baseUrl + Endpoints.updateFcmToken));
+    request.fields['userid'] = user_id;
+    request.fields['fcm_token'] = fcmToken;
+    request.fields['gcm_token'] = deviceId;
+    request.fields['token'] = token;
+
+    var response = await request.send();
+
+    var responsed = await http.Response.fromStream(response);
+    print(responsed.body);
+    var res = jsonDecode(responsed.body);
+    if (response.statusCode == 200) {
+      return res["fcm_token"] ?? "";
+    } else {
+      return "";
     }
   }
 

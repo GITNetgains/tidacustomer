@@ -333,7 +333,7 @@ class _HomeViewState extends State<HomeView> {
                           "There are no popular tournaments now.")),
                 )
               : Container(
-                  height: 257.h,
+                  height: 277.h,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: c.tournamentslist!.length,
@@ -465,19 +465,22 @@ class _HomeViewState extends State<HomeView> {
                       child:
                           setXSmallLabel("There are no experiences nearby.")),
                 )
-              : SizedBox(
-                  height: 257.h,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: c.experienceslist!.length,
-                      itemBuilder: (context, index) {
-                        return experincecard(
-                            c.experienceslist![index]!.image.toString(),
-                            c.experienceslist![index]!.title.toString(),
-                            c.experienceslist![index]!.description.toString(),
-                            c.experienceslist![index]!.id.toString());
-                      }),
-                ),
+              : Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0).r,
+                child: SizedBox(
+                    height: 257.h,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: c.experienceslist!.length,
+                        itemBuilder: (context, index) {
+                          return experincecard(
+                              c.experienceslist![index]!.image.toString(),
+                              c.experienceslist![index]!.title.toString(),
+                              c.experienceslist![index]!.description.toString(),
+                              c.experienceslist![index]!.id.toString());
+                        }),
+                  ),
+              ),
         ],
       );
     });

@@ -23,8 +23,8 @@ class AcademyController extends GetxController {
 
   Future<void> getAcademies() async {
     academies!.clear();
-    var lati = await MySharedPref.getlati();
-    var lngi = await MySharedPref.getlongi();
+    var lati = MySharedPref.getlati();
+    var lngi = MySharedPref.getlongi();
     String lat = "";
     String lng = "";
     if (isProperString(lati)! && isProperString(lngi)!) {
@@ -41,6 +41,7 @@ class AcademyController extends GetxController {
     await ApiService.getAcademies(data).then((response) {
       AcademyFullDetailResponse? res =
           academyFullDetailResponseFromJson(response);
+          
       if (res!.status!) {
         academies!.addAll(res.data!);
         academies!.sort((a, b) {
@@ -48,9 +49,11 @@ class AcademyController extends GetxController {
           double distanceB = double.tryParse(b!.distance ?? '') ?? 0.0;
           return distanceA.compareTo(distanceB);
         });
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        print(academies!.length);
         update();
       } else {
-        //Get.snackbar("Error", "${res.message}");
+        // Get.snackbar("Error", "${res.message}");
       }
       isLoading(false);
       update();

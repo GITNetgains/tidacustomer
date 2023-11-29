@@ -1,9 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:tida_customer/app/modules/Home/controllers/home_controller.dart';
 import 'package:tida_customer/app/routes/app_pages.dart';
 import 'package:tida_customer/config/theme/app_theme.dart';
 import 'package:tida_customer/utils/color_utils.dart';
@@ -68,14 +66,14 @@ Widget tournamentcard(String url, String name, String description, String id,
       Get.toNamed(AppPages.TOURNAMENT_DETAILS, parameters: {"id": id});
     },
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal:8.0).w,
+      padding: const EdgeInsets.all(8.0).h,
       child: Container(
           margin: EdgeInsets.symmetric(vertical: verticalmargin),
           width: MediaQuery.of(Get.context!).size.width * 0.9,
-          height:  MediaQuery.of(Get.context!).size.width/2,
+          // height:  MediaQuery.of(Get.context!).size.width/2,
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Colors.black12, width: 0.5),
+            border: Border.all(color: Colors.black12, width: 0.5.w),
             borderRadius: BorderRadius.circular(
               24.0,
             ),
@@ -142,16 +140,16 @@ Widget experincecard(String url, String name, String description, String id,
       Get.toNamed(AppPages.EXPERIENCE_DETAILS, parameters: {"id": id});
     },
     child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal:8.0).w,
+      padding: const EdgeInsets.symmetric(horizontal:8.0).h,
       child: Container(
           margin: EdgeInsets.symmetric(vertical: verticalmargin),
           width: MediaQuery.of(Get.context!).size.width * 0.9,
           // height:  MediaQuery.of(Get.context!).size.width/2,
           decoration: BoxDecoration(
             color: Colors.white,
-            border: Border.all(color: Colors.black12, width: 0.5),
+            border: Border.all(color: Colors.black12, width: 0.5.w),
             borderRadius: BorderRadius.circular(
-              24.0,
+              24.0.r,
             ),
             boxShadow: [
               BoxShadow(
@@ -409,7 +407,7 @@ Widget getvenueimagewidget(
         // width: 500.w,
         fadeInDuration: const Duration(seconds: 1),
         errorWidget: (context, exception, stacktrace) {
-          return Text(stacktrace.toString());
+          return Icon(Icons.error);
         },
         progressIndicatorBuilder: (context, url, progress) {
           return Image.asset(
@@ -432,7 +430,7 @@ Widget sportsCard(id, name, image) {
           Get.toNamed(AppPages.SPORTS, parameters: {"id": id, "name": name});
         },
         child: Container(
-          height: 100.0.h,
+          height: 105.0.h,
           width: 100.0.h,
           decoration: BoxDecoration(
             border: Border.all(color: PRIMARY_COLOR),
@@ -450,12 +448,12 @@ Widget sportsCard(id, name, image) {
                         Icons.sports_cricket,
                         color: PRIMARY_COLOR,
                       )
-                    : Container(
+                    : SizedBox(
                         width: 50.h,
                         height: 50.h,
                         child: ClipRRect(child: sportsimagewidget(image))),
                 //SizedBox(height: 12.0,),
-                setSmallLabel(name ?? "Cricket")
+                setSmallLabel(name ?? "Cricket", align: TextAlign.center, )
               ],
             ),
           ),

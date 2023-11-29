@@ -2,6 +2,7 @@ import Easebuzz
 import FirebaseCore
 import Flutter
 import UIKit
+import flutter_local_notifications
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, PayWithEasebuzzCallback {
@@ -16,6 +17,13 @@ import UIKit
   // Initialise flutter channel
   func initializeFlutterChannelMethod() {
     FirebaseApp.configure()
+    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+      GeneratedPluginRegistrant.register(with: registry)
+    }
+
+    if #available(iOS 10.0, *) {
+      UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
+    }
 
     GeneratedPluginRegistrant.register(with: self)
     guard let controller = window?.rootViewController as? FlutterViewController else {

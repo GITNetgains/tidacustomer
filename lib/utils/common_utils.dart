@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:maps_launcher/maps_launcher.dart';
@@ -8,6 +9,18 @@ import 'package:tida_customer/utils/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+Future<String?> getId() async {
+  var deviceInfo = DeviceInfoPlugin();
+  if (Platform.isIOS) {
+    // import 'dart:io'
+    var iosDeviceInfo = await deviceInfo.iosInfo;
+    return iosDeviceInfo.identifierForVendor; // unique ID on iOS
+  } else if (Platform.isAndroid) {
+    var androidDeviceInfo = await deviceInfo.androidInfo;
+    return androidDeviceInfo.id; // unique ID on Android
+  }
+}
 
 void openMap(lat, lon, place) {
   String title = "";

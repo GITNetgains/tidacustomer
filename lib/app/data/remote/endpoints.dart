@@ -32,4 +32,6 @@ class Endpoints {
   static const cmsApiGetAllData = "/Cms_api/getAllData";
   static const SAVE_RATING = "/Review_api/insertData";
   static const sendBookingNotification = "/partner_notification";
+  static const getFcmToken = '/notification/find_fcm_token';
+  static const updateFcmToken = '/notification/update_fcm_token';
 }

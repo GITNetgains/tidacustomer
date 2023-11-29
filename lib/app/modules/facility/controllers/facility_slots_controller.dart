@@ -17,6 +17,7 @@ class FacilitySlotsController extends GetxController {
   static MethodChannel channel = MethodChannel('easebuzz');
   String? userId, userName, token;
   List<Datum?>? slots = List.empty(growable: true);
+  List<Datum?>? newslots = List.empty(growable: true);
   bool? isLoading = true, hasCallSupport = false;
   String? facilityId;
   String? facilityname;

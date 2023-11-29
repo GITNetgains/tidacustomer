@@ -23,11 +23,11 @@ class VenueListView extends StatelessWidget {
           body: RefreshIndicator(
             onRefresh: c.getVenues,
             child: basebody(
-              c.isLoading.value!,
-              c.venues!.isEmpty
+              c.isLoading.value,
+              c.venues.isEmpty
                   ? NoData()
                   : ListView.builder(
-                      itemCount: c.venues!.length,
+                      itemCount: c.venues.length,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 5),
                       itemBuilder: (BuildContext context, int index) {

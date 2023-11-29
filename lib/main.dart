@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:tida_customer/app/data/local/my_shared_pref.dart';
 import 'package:tida_customer/app/data/models/notification_model.dart';
+import 'package:tida_customer/app/data/remote/api_service.dart';
 import 'package:tida_customer/app/modules/Booking/controllers/orders_controller.dart';
 import 'package:tida_customer/app/modules/orders/views/order_details.dart';
 import 'package:tida_customer/app/routes/app_pages.dart';
@@ -37,16 +39,27 @@ bool isFlutterLocalNotificationsInitialized = false;
 
 Future<bool> requestNotificationPermissions(BuildContext context) async {
   final PermissionStatus status = await Permission.notification.request();
-  if (status.isGranted) {
-    return true;
-  } else {
-    return false;
-  }
+  // if (status.isPermanentlyDenied) {
+  //   return false;
+  // } else {
+  //   return true;
+  // }
+  return true;
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Crashlytics
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 
   if (!kIsWeb) {
     await setupFlutterNotifications();
@@ -123,6 +136,17 @@ Future<void> main() async {
 }
 
 Future<void> setupInteractedMessage() async {
+  try {
+    String? token = await FirebaseMessaging.instance.getToken();
+    if (token != null) await ApiService().updateFcmToken(token);
+  } catch (e) {
+    print(e);
+  }
+
+  FirebaseMessaging.instance.onTokenRefresh.listen((token) async {
+    await ApiService().updateFcmToken(token);
+  });
+
   RemoteMessage? initialMessage =
       await FirebaseMessaging.instance.getInitialMessage();
   if (initialMessage != null) {
